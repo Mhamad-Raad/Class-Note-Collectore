@@ -1,11 +1,22 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp/Providers/User.dart';
+import 'package:fyp/screens/profile.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
   TextEditingController emlController = TextEditingController();
+
   TextEditingController pssController = TextEditingController();
+
   addUser(email, pass) {
     var url =
         'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users.json';
@@ -14,8 +25,11 @@ class Login extends StatelessWidget {
             {'email': emlController.text, 'password': pssController.text}));
   }
 
+  var isLoading = false;
+
   @override
   Widget build(BuildContext context) {
+    var user = Provider.of<User>(context);
     var mediaQuery = MediaQuery.of(context);
     return Scaffold(
       backgroundColor: const Color.fromRGBO(224, 231, 244, 1),
@@ -118,10 +132,30 @@ class Login extends StatelessWidget {
                       height: mediaQuery.size.height * .1 * .5,
                     ),
                     ElevatedButton(
-                      onPressed: () {
-                        addUser(emlController.text, pssController.text);
+                      child: isLoading
+                          ? CircularProgressIndicator()
+                          : Text("Sign in"),
+                      onPressed: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+
+                        print(isLoading);
+                        await user.Login(emlController.text, pssController.text)
+                            .then(
+                          (_) => {
+                            setState(() {
+                              isLoading = false;
+                            }),
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Profile(),
+                              ),
+                            ),
+                          },
+                        );
                       },
-                      child: const Text("Sign in"),
                       style: ButtonStyle(
                         minimumSize: MaterialStateProperty.all<Size>(
                           const Size(150, 50),
