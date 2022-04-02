@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/Providers/User.dart';
 import 'package:fyp/screens/profile.dart';
@@ -16,7 +14,7 @@ class _LoginState extends State<Login> {
   TextEditingController emlController = TextEditingController();
 
   TextEditingController pssController = TextEditingController();
-
+  final _formKey = GlobalKey<FormState>();
   addUser(email, pass) {
     var url =
         'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users.json';
@@ -79,104 +77,156 @@ class _LoginState extends State<Login> {
                 ),
               ),
               SizedBox(
-                height: mediaQuery.size.height * .1,
+                height: mediaQuery.size.height * .07,
               ),
               SizedBox(
                 width: mediaQuery.size.width * .8,
-                height: mediaQuery.size.height * .471,
-                child: Column(
-                  children: [
-                    TextField(
-                      controller: emlController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        labelText: "Email",
-                        hintText: "Email",
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Color.fromRGBO(124, 131, 254, 1),
-                          ),
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: mediaQuery.size.height * .05 * .5,
-                    ),
-                    TextField(
-                      obscureText: true,
-                      controller: pssController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        labelText: "Password",
-                        hintText: "Password",
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Color.fromRGBO(124, 131, 254, 1),
-                          ),
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: mediaQuery.size.height * .1 * .5,
-                    ),
-                    SizedBox(
-                      width: mediaQuery.size.width * .4,
-                      height: mediaQuery.size.height * .2 * .5,
-                      child: dropDown(),
-                    ),
-                    SizedBox(
-                      height: mediaQuery.size.height * .1 * .5,
-                    ),
-                    ElevatedButton(
-                      child: isLoading
-                          ? CircularProgressIndicator()
-                          : Text("Sign in"),
-                      onPressed: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
+                height: mediaQuery.size.height * .6,
+                child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "please insert you email";
+                            } else if (!value.contains('@')) {
+                              return 'Please input a valid email';
+                            }
 
-                        print(isLoading);
-                        await user.Login(emlController.text, pssController.text)
-                            .then(
-                          (_) => {
-                            setState(() {
-                              isLoading = false;
-                            }),
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const Profile(),
-                              ),
-                            ),
+                            return null;
                           },
-                        );
-                      },
-                      style: ButtonStyle(
-                        minimumSize: MaterialStateProperty.all<Size>(
-                          const Size(150, 50),
-                        ),
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color.fromRGBO(124, 131, 254, 1),
-                        ),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
+                          controller: emlController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            labelText: "Email",
+                            hintText: "Email",
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Color.fromRGBO(124, 131, 254, 1),
+                              ),
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  ],
+                        SizedBox(
+                          height: mediaQuery.size.height * .05 * .5,
+                        ),
+                        TextFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "please insert you Password";
+                            }
+
+                            return null;
+                          },
+                          obscureText: true,
+                          controller: pssController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            labelText: "Password",
+                            hintText: "Password",
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Color.fromRGBO(124, 131, 254, 1),
+                              ),
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: mediaQuery.size.height * .1 * .5,
+                        ),
+                        SizedBox(
+                          width: mediaQuery.size.width * .4,
+                          height: mediaQuery.size.height * .2 * .5,
+                          child: dropDown(),
+                        ),
+                        SizedBox(
+                          height: mediaQuery.size.height * .1 * .5,
+                        ),
+                        isLoading
+                            ? const CircularProgressIndicator()
+                            : ElevatedButton(
+                                child: const Text("Sign in"),
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text('Processing Data')),
+                                    );
+                                  }
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+
+                                  bool found = false;
+                                  await user.Login(emlController.text,
+                                          pssController.text, user.type)
+                                      .then((value) => {
+                                            found = value,
+                                          });
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+
+                                  if (found) {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const Profile(),
+                                      ),
+                                    );
+                                  } else {
+                                    showDialog(
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                              "Wrong user name or password"),
+                                          actions: [
+                                            ElevatedButton(
+                                              child: const Text("OK"),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                            )
+                                          ],
+                                        );
+                                      },
+                                      context: context,
+                                    );
+                                  }
+                                },
+                                style: ButtonStyle(
+                                  minimumSize: MaterialStateProperty.all<Size>(
+                                    const Size(150, 50),
+                                  ),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                    const Color.fromRGBO(124, 131, 254, 1),
+                                  ),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                    ),
+                                  ),
+                                ),
+                              )
+                      ],
+                    ),
+                  ),
                 ),
               ),
-              SizedBox(
-                height: mediaQuery.size.height * .09,
-              ),
+              // SizedBox(
+              //   height: mediaQuery.size.height * .09,
+              // ),
               Container(
                 width: mediaQuery.size.width,
                 height: mediaQuery.size.height * .139,
@@ -207,7 +257,6 @@ class _LoginState extends State<Login> {
 }
 
 class dropDown extends StatefulWidget {
-  var chosen = "Student";
   dropDown({Key? key}) : super(key: key);
 
   @override
@@ -217,17 +266,19 @@ class dropDown extends StatefulWidget {
 class _dropDownState extends State<dropDown> {
   @override
   Widget build(BuildContext context) {
+    var chosen = "Student";
+    var user = Provider.of<User>(context);
     return DropdownButtonFormField(
         decoration: const InputDecoration(
           filled: true,
           fillColor: Colors.white,
           border: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(50.0)),
+            borderRadius: BorderRadius.all(Radius.circular(50.0)),
           ),
         ),
         style: const TextStyle(fontSize: 16, color: Colors.black),
-        value: widget.chosen,
-        items: <String>["Student", "Admin", "Lecturer"]
+        value: chosen,
+        items: <String>["Student", "Admin", "Lecturer", 'users']
             .map<DropdownMenuItem<String>>((String v) {
           return DropdownMenuItem<String>(
             value: v,
@@ -235,8 +286,10 @@ class _dropDownState extends State<dropDown> {
           );
         }).toList(),
         onChanged: (String? a) {
+          print(a);
           setState(() {
-            widget.chosen = a ?? "Student";
+            chosen = a ?? "";
+            user.type = a ?? "";
           });
         });
   }

@@ -16,16 +16,27 @@ class User extends ChangeNotifier {
     required this.type,
   });
 
-  Future<void> Login(email, password) async {
+  Future<bool> Login(email, password, type) async {
+    print(email + password);
+
+    bool found = false;
+
     var url =
-        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users.json';
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/$type.json';
     final response = await http.get(Uri.parse(url));
 
     var data = json.decode(response.body) as Map<String, dynamic>;
-    print(data);
+
     data.forEach((id, structure) {
-      this.id = id;
-      this.Name = structure['email'];
+      if (email == structure['email'] && password == structure['password']) {
+        this.id = id;
+        this.Email = structure['email'];
+        this.type = structure['type'];
+        this.Name = structure['name'];
+        found = true;
+      }
     });
+
+    return found;
   }
 }

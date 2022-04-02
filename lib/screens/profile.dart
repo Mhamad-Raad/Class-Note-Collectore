@@ -62,7 +62,7 @@ class _ProfileState extends State<Profile> {
             ),
             SizedBox(
               width: Media.size.width,
-              height: Media.size.height * .25,
+              height: Media.size.height * .27,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -80,15 +80,15 @@ class _ProfileState extends State<Profile> {
                     children: [
                       Text(
                         "Name: ${user.Name}",
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                           fontSize: 13,
                         ),
                       ),
                       Text(
-                        "ID:",
-                        style: TextStyle(
+                        "ID: ${user.id}",
+                        style: const TextStyle(
                           color: Colors.grey,
                           fontWeight: FontWeight.bold,
                           fontSize: 10,
@@ -118,7 +118,11 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     child: Column(
-                      children: [],
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Icon(FontAwesomeIcons.graduationCap),
+                        
+                      ],
                     ),
                   ),
                   Container(
@@ -175,17 +179,17 @@ class _ProfileState extends State<Profile> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(
-              FontAwesomeIcons.person,
+              FontAwesomeIcons.graduationCap,
             ),
-            label: "haa",
+            label: "Profile",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.mail),
-            label: "haa",
+            icon: Icon(Icons.timeline),
+            label: "Course",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "haa",
+            icon: Icon(Icons.group),
+            label: "Groups",
           )
         ],
       ),
