@@ -5,8 +5,9 @@ class Course {
 
   String Name;
   int Credit;
-  double Mark;
-  int id;
+  int Mark;
+  String id;
+  int progress = 0;
 
   Course({
     required this.Name,

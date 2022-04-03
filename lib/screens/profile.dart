@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/models/Admin.dart';
+import 'package:fyp/screens/CourseDetails.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -120,8 +121,9 @@ class _ProfileState extends State<Profile> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Icon(FontAwesomeIcons.graduationCap),
-                        
+                        const Icon(FontAwesomeIcons.graduationCap),
+                        Text(user.credits.toString()),
+                        const Text("Credits")
                       ],
                     ),
                   ),
@@ -135,7 +137,12 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     child: Column(
-                      children: [],
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Icon(Icons.timeline),
+                        Text(user.cgpa.toString()),
+                        const Text("CGPA")
+                      ],
                     ),
                   ),
                 ],
@@ -145,7 +152,7 @@ class _ProfileState extends State<Profile> {
               height: Media.size.height * .03,
             ),
             Container(
-              height: Media.size.height * .2,
+              height: Media.size.height * .22,
               width: Media.size.width * .8,
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -153,17 +160,40 @@ class _ProfileState extends State<Profile> {
                   Radius.circular(10),
                 ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
-                  Text("C++"),
-                  Slider(
-                    min: 0,
-                    max: 100,
-                    value: 50,
-                    onChanged: null,
-                    inactiveColor: Colors.purple,
-                    thumbColor: Colors.black,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: Media.size.height * .19,
+                    width: Media.size.width * .8,
+                    child: ListView.builder(
+                      itemCount: user.courses.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(user.courses[index].Name),
+                            Slider(
+                              min: 0,
+                              max: 100,
+                              value: user.courses[index].progress * 1.0,
+                              onChanged: null,
+                              inactiveColor: Colors.purple,
+                              thumbColor: Colors.black,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                  Container(
+                    width: 50,
+                    height: 3,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(50),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -175,7 +205,16 @@ class _ProfileState extends State<Profile> {
         backgroundColor: const Color.fromRGBO(124, 131, 253, 1),
         selectedItemColor: Colors.amber,
         currentIndex: 0,
-        onTap: (val) {},
+        onTap: (val) {
+          if (val == 1) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CoursesDetails(),
+              ),
+            );
+          }
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(

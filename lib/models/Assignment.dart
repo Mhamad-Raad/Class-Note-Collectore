@@ -1,7 +1,7 @@
 class Assignment {
-  int Id;
+  String Id;
   String Content;
-  double Mark;
+  var Mark;
 
   Assignment({
     required this.Mark,

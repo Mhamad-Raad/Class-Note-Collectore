@@ -1,13 +1,19 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
+import 'package:fyp/models/Assignment.dart';
 import 'package:http/http.dart' as http;
+
+import '../models/Course.dart';
 
 class User extends ChangeNotifier {
   String Name;
   String Email;
   String id;
   String type;
+  String courseId = '';
+  List<Course> courses = [];
+  int credits = 0;
+  double cgpa = 0;
 
   User({
     required this.Name,
@@ -31,12 +37,49 @@ class User extends ChangeNotifier {
       if (email == structure['email'] && password == structure['password']) {
         this.id = id;
         this.Email = structure['email'];
-        this.type = structure['type'];
         this.Name = structure['name'];
+        this.credits = structure['credits'];
+        this.cgpa = structure['cgpa'];
+
         found = true;
       }
     });
 
     return found;
+  }
+
+  getCourses() async {
+    print(this.type + this.id);
+    final url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/${this.type}/${this.id}/courses.json';
+
+    final response = await http.get(Uri.parse(url));
+    print(response.body);
+    var data = json.decode(response.body) as Map<String, dynamic>;
+
+    data.forEach((id, structure) {
+      Course course = Course(Name: "Name", Credit: 0, Mark: 0, id: "0");
+      course.id = id;
+      course.Name = structure['name'];
+      course.Credit = structure['credits'];
+      course.Mark = structure['mark'] ;
+      course.progress = structure['progress'];
+
+print(structure['assignments'].toString());
+      var assignments =
+          structure['assignments'] as Map<String, dynamic>;
+
+      assignments.forEach((id, structure) {
+        var asg = Assignment(Mark: 0, Content: 'Content', Id: "0");
+        asg.Id = id;
+        asg.Content = structure['content'];
+        asg.Mark = structure['mark'];
+        course.assignments.add(asg);
+      });
+
+      courses.add(course);
+    });
+
+    ChangeNotifier();
   }
 }

@@ -174,6 +174,7 @@ class _LoginState extends State<Login> {
                                   });
 
                                   if (found) {
+                                    user.getCourses();
                                     setState(() {
                                       isLoading = true;
                                     });
@@ -224,9 +225,6 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
-              // SizedBox(
-              //   height: mediaQuery.size.height * .09,
-              // ),
               Container(
                 width: mediaQuery.size.width,
                 height: mediaQuery.size.height * .139,
@@ -286,11 +284,11 @@ class _dropDownState extends State<dropDown> {
           );
         }).toList(),
         onChanged: (String? a) {
-          print(a);
           setState(() {
             chosen = a ?? "";
             user.type = a ?? "";
           });
+          print(user.type);
         });
   }
 }
