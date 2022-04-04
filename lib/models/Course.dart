@@ -8,6 +8,7 @@ class Course {
   int Mark;
   String id;
   int progress = 0;
+  var weeks = 0;
 
   Course({
     required this.Name,

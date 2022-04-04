@@ -60,20 +60,24 @@ class User extends ChangeNotifier {
     data.forEach((id, structure) {
       Course course = Course(Name: "Name", Credit: 0, Mark: 0, id: "0");
       course.id = id;
+
       course.Name = structure['name'];
       course.Credit = structure['credits'];
-      course.Mark = structure['mark'] ;
+      course.Mark = structure['mark'];
       course.progress = structure['progress'];
+      course.weeks = structure['weeks'];
 
-print(structure['assignments'].toString());
-      var assignments =
-          structure['assignments'] as Map<String, dynamic>;
+      print(structure['assignments'].toString());
+      var assignments = structure['assignments'] as Map<String, dynamic>;
 
       assignments.forEach((id, structure) {
         var asg = Assignment(Mark: 0, Content: 'Content', Id: "0");
         asg.Id = id;
         asg.Content = structure['content'];
         asg.Mark = structure['mark'];
+        asg.title = structure['title'];
+        asg.date = structure['date'];
+        asg.status = structure['status'];
         course.assignments.add(asg);
       });
 
@@ -81,5 +85,22 @@ print(structure['assignments'].toString());
     });
 
     ChangeNotifier();
+  }
+
+  notifystatus(courseIndex, assignmentIndex, newval) {
+    courses[courseIndex].assignments[assignmentIndex].status = newval;
+    notifyListeners();
+  }
+
+  updateAssignmentStatus(
+      {courseIndex, assignmentIndex, required bool newStatus}) async {
+    final url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/-MzLV_S7pw_fUOBs2ldg/courses/%220%22/assignments/%220%22.json';
+    var response = await http.patch(
+      Uri.parse(url),
+      body: json.encode({'status': newStatus}),
+    );
+
+    print(response.body);
   }
 }

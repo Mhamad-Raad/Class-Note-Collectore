@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fyp/screens/AssignmentInfo.dart';
 import 'package:fyp/screens/CourseDetails.dart';
 import 'package:provider/provider.dart';
 
@@ -41,6 +42,74 @@ class CourseInfo extends StatelessWidget {
       body: SizedBox(
         height: Media.size.height,
         width: Media.size.width,
+        child: ListView.builder(
+          itemCount: user.courses[index].weeks,
+          itemBuilder: (BuildContext context, int i) {
+            print(i);
+            print(user.courses[index].assignments[i].date);
+            if (user.courses[index].assignments[i].date == i + 1) {
+              return Container(
+                margin: EdgeInsets.only(top: 30),
+                height: 150,
+                width: double.infinity,
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Week ${i + 1}",
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Container(
+                      color: Colors.grey[300],
+                      width: Media.size.width,
+                      height: 2,
+                    ),
+                    const Text(
+                      "Assignments",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          user.courses[index].assignments[i].title,
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: const Color.fromRGBO(124, 131, 253, 1),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AssignmentInfo(
+                                  asgi: i,
+                                  coursei: index,
+                                ),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            "view assignment",
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              );
+            }
+            return Container();
+          },
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color.fromRGBO(124, 131, 253, 1),
