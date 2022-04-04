@@ -158,6 +158,9 @@ class _LoginState extends State<Login> {
                                       const SnackBar(
                                           content: Text('Processing Data')),
                                     );
+                                  } else if (!_formKey.currentState!
+                                      .validate()) {
+                                    return;
                                   }
                                   setState(() {
                                     isLoading = true;
@@ -174,16 +177,17 @@ class _LoginState extends State<Login> {
                                   });
 
                                   if (found) {
-                                    user.getCourses();
-                                    setState(() {
-                                      isLoading = true;
-                                    });
-                                    Navigator.push(
+                                    await user.getCourses();
+
+                                    Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => const Profile(),
                                       ),
                                     );
+                                    setState(() {
+                                      isLoading = true;
+                                    });
                                   } else {
                                     showDialog(
                                       builder: (BuildContext context) {
@@ -288,7 +292,6 @@ class _dropDownState extends State<dropDown> {
             chosen = a ?? "";
             user.type = a ?? "";
           });
-          print(user.type);
         });
   }
 }

@@ -48,26 +48,24 @@ class User extends ChangeNotifier {
     return found;
   }
 
-  getCourses() async {
-    print(this.type + this.id);
+  Future<void> getCourses() async {
     final url =
         'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/${this.type}/${this.id}/courses.json';
 
     final response = await http.get(Uri.parse(url));
-    print(response.body);
+
     var data = json.decode(response.body) as Map<String, dynamic>;
 
-    data.forEach((id, structure) {
+    data.forEach((id, structure) async {
       Course course = Course(Name: "Name", Credit: 0, Mark: 0, id: "0");
       course.id = id;
 
-      course.Name = structure['name'];
+      course.Name = await structure['name'];
       course.Credit = structure['credits'];
       course.Mark = structure['mark'];
       course.progress = structure['progress'];
       course.weeks = structure['weeks'];
 
-      print(structure['assignments'].toString());
       var assignments = structure['assignments'] as Map<String, dynamic>;
 
       assignments.forEach((id, structure) {
@@ -95,12 +93,10 @@ class User extends ChangeNotifier {
   updateAssignmentStatus(
       {courseIndex, assignmentIndex, required bool newStatus}) async {
     final url =
-        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/-MzLV_S7pw_fUOBs2ldg/courses/%220%22/assignments/%220%22.json';
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/$type/$id/courses/"$courseIndex"/assignments/"$assignmentIndex".json';
     var response = await http.patch(
       Uri.parse(url),
       body: json.encode({'status': newStatus}),
     );
-
-    print(response.body);
   }
 }

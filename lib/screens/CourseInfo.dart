@@ -45,11 +45,9 @@ class CourseInfo extends StatelessWidget {
         child: ListView.builder(
           itemCount: user.courses[index].weeks,
           itemBuilder: (BuildContext context, int i) {
-            print(i);
-            print(user.courses[index].assignments[i].date);
             if (user.courses[index].assignments[i].date == i + 1) {
               return Container(
-                margin: EdgeInsets.only(top: 30),
+                margin: const EdgeInsets.only(top: 30),
                 height: 150,
                 width: double.infinity,
                 child: Column(
