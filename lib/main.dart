@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/Providers/User.dart';
+import 'package:fyp/screens/Admin_Add_User.dart';
 import 'package:fyp/screens/profile.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +31,7 @@ class _MyAPPState extends State<MyAPP> {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Login(),
+        home: AddUser(),
       ),
     );
   }
