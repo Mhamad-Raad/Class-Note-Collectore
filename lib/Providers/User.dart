@@ -63,7 +63,7 @@ class User extends ChangeNotifier {
       course.Name = await structure['name'];
       course.Credit = structure['credits'];
       course.Mark = structure['mark'];
-      course.progress = structure['progress'];
+      course.progress = structure['progress'] + 0.0;
       course.weeks = structure['weeks'];
 
       var assignments = structure['assignments'] as Map<String, dynamic>;
@@ -82,7 +82,7 @@ class User extends ChangeNotifier {
       courses.add(course);
     });
 
-    ChangeNotifier();
+    notifyListeners();
   }
 
   notifystatus(courseIndex, assignmentIndex, newval) {
@@ -94,9 +94,32 @@ class User extends ChangeNotifier {
       {courseIndex, assignmentIndex, required bool newStatus}) async {
     final url =
         'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/$type/$id/courses/"$courseIndex"/assignments/"$assignmentIndex".json';
-    var response = await http.patch(
+    await http.patch(
       Uri.parse(url),
       body: json.encode({'status': newStatus}),
     );
+  }
+
+  updateCourseProgress(courseIndex) async {
+    var percentage = 100 / courses[courseIndex].assignments.length;
+
+    double total = 0;
+
+    for (int i = 0; i < courses[courseIndex].assignments.length; i++) {
+      if (courses[courseIndex].assignments[i].status == true) {
+        total += percentage;
+      }
+    }
+
+    final url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/$type/$id/courses/"$courseIndex".json';
+
+    await http.patch(
+      Uri.parse(url),
+      body: json.encode({'progress': total}),
+    );
+
+    courses[courseIndex].progress = total;
+    notifyListeners();
   }
 }

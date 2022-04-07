@@ -133,6 +133,8 @@ class _AssignmentInfoState extends State<AssignmentInfo> {
                           courseIndex: widget.coursei,
                           newStatus: newValue ?? false);
                       user.notifystatus(widget.coursei, widget.asgi, newValue);
+
+                      user.updateCourseProgress(widget.coursei);
                     });
                   },
                 ),

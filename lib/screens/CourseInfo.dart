@@ -22,7 +22,12 @@ class CourseInfo extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(FontAwesomeIcons.angleLeft),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CoursesDetails(),
+              ),
+            );
           },
         ),
         centerTitle: true,

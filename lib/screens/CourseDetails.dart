@@ -17,7 +17,7 @@ class _CoursesDetailsState extends State<CoursesDetails> {
   List v = List.generate(10, (index) => false);
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
+    final user = Provider.of<User>(context, listen: true);
 
     final Media = MediaQuery.of(context);
     return Scaffold(
@@ -164,10 +164,15 @@ class _CoursesDetailsState extends State<CoursesDetails> {
                                           "progress: ",
                                           textAlign: TextAlign.start,
                                         ),
-                                        Text(
-                                          user.courses[index].progress
-                                                  .toString() +
-                                              "%",
+                                        Consumer<User>(
+                                          builder: (BuildContext context, value,
+                                              Widget? child) {
+                                            return Text(
+                                              user.courses[index].progress
+                                                      .toString() +
+                                                  "%",
+                                            );
+                                          },
                                         )
                                       ],
                                     ),
