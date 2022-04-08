@@ -51,9 +51,6 @@ class _LoginState extends State<Login> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // SizedBox(
-                      //   height: mediaQuery.size.height * .3 * .2,
-                      // ),
                       const Text(
                         "Qaiwan International University",
                         style: TextStyle(

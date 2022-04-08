@@ -122,4 +122,35 @@ class User extends ChangeNotifier {
     courses[courseIndex].progress = total;
     notifyListeners();
   }
+
+  Future<void> addStudent({name, password, email, type, id}) async {
+    final url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/$type/$id.json';
+    await http.post(
+      Uri.parse(url),
+      body: json.encode(
+        {
+          'type': type,
+          'name': name,
+          'password': password,
+          'email': email,
+          'id': id,
+        },
+      ),
+    );
+  }
+
+  Future<void> addLecturer({type, name, course, email, password, id}) async {
+    final url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/$type/$id.json';
+    await http.post(Uri.parse(url),
+        body: json.encode({
+          'type': type,
+          'name': name,
+          'password': password,
+          'email': email,
+          'id': id,
+          'course': course
+        }));
+  }
 }
