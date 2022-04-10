@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/models/Admin.dart';
-import 'package:fyp/screens/CourseDetails.dart';
+import 'package:fyp/screens/Student/CourseDetails.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

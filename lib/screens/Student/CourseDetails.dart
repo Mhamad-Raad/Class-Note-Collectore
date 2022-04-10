@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fyp/screens/CourseInfo.dart';
+import 'package:fyp/screens/Student/CourseInfo.dart';
 import 'package:fyp/screens/profile.dart';
 import 'package:provider/provider.dart';
 
-import '../Providers/User.dart';
+import '../../Providers/User.dart';
 
 class CoursesDetails extends StatefulWidget {
   const CoursesDetails({Key? key}) : super(key: key);

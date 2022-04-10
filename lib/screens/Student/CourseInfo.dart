@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fyp/screens/AssignmentInfo.dart';
-import 'package:fyp/screens/CourseDetails.dart';
+import 'package:fyp/screens/Student/AssignmentInfo.dart';
+import 'package:fyp/screens/Student/CourseDetails.dart';
 import 'package:provider/provider.dart';
 
-import '../Providers/User.dart';
-import 'profile.dart';
+import '../../Providers/User.dart';
+import '../profile.dart';
 
 class CourseInfo extends StatelessWidget {
   late int index;

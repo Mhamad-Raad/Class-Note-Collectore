@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '../Providers/User.dart';
+import '../../Providers/User.dart';
 
 class AddUser extends StatefulWidget {
   const AddUser({Key? key}) : super(key: key);
@@ -17,6 +17,8 @@ class _AddUserState extends State<AddUser> {
   final passController = TextEditingController();
   var nameController = TextEditingController();
   final idController = TextEditingController();
+  final courseController = TextEditingController();
+
   var isLoadingStudent = false;
   var isLoadingLecturer = false;
   var chosen = 'Student';
@@ -216,7 +218,35 @@ class _AddUserState extends State<AddUser> {
                                 height: 50,
                               ),
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    setState(() {
+                                      isLoadingStudent = true;
+                                    });
+
+                                    await user
+                                        .addStudent(
+                                            name: nameController.text,
+                                            type: chosen,
+                                            email: emlController.text,
+                                            password: passController.text,
+                                            id: idController.text)
+                                        .then(
+                                          (value) => {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content:
+                                                    Text('Processing Data'),
+                                              ),
+                                            )
+                                          },
+                                        );
+                                  } else if (!_formKey.currentState!
+                                      .validate()) {
+                                    return;
+                                  }
+                                },
                                 child: const Text("Submit"),
                                 style: ButtonStyle(
                                   minimumSize: MaterialStateProperty.all<Size>(
@@ -348,7 +378,7 @@ class _AddUserState extends State<AddUser> {
                                     return "please insert you Password";
                                   }
                                 },
-                                controller: idController,
+                                controller: courseController,
                                 decoration: InputDecoration(
                                   filled: true,
                                   labelText: "Course",
@@ -365,24 +395,37 @@ class _AddUserState extends State<AddUser> {
                               const SizedBox(
                                 height: 50,
                               ),
-                              isLoadingStudent
+                              isLoadingLecturer
                                   ? const CircularProgressIndicator()
                                   : ElevatedButton(
-                                      onPressed: () {
+                                      onPressed: () async {
                                         if (_formKey.currentState!.validate()) {
                                           setState(() {
-                                            isLoadingStudent = true;
+                                            isLoadingLecturer = true;
                                           });
 
-                                          user.addStudent().then((value) => {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  const SnackBar(
-                                                    content:
-                                                        Text('Processing Data'),
-                                                  ),
-                                                )
-                                              });
+                                          await user
+                                              .addLecturer(
+                                                  name: nameController.text,
+                                                  type: chosen,
+                                                  course: courseController.text,
+                                                  email: emlController.text,
+                                                  password: passController.text,
+                                                  id: idController.text)
+                                              .then(
+                                                (value) => {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text(
+                                                          'Processing Data'),
+                                                    ),
+                                                  )
+                                                },
+                                              );
+                                          setState(() {
+                                            isLoadingLecturer = false;
+                                          });
                                         } else if (!_formKey.currentState!
                                             .validate()) {
                                           return;

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:fyp/models/Assignment.dart';
+import 'package:fyp/screens/Admin/searchUser.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/Course.dart';
@@ -14,6 +15,7 @@ class User extends ChangeNotifier {
   List<Course> courses = [];
   int credits = 0;
   double cgpa = 0;
+  List<String> suggestions = [];
 
   User({
     required this.Name,
@@ -126,7 +128,7 @@ class User extends ChangeNotifier {
   Future<void> addStudent({name, password, email, type, id}) async {
     final url =
         'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/$type/$id.json';
-    await http.post(
+    await http.put(
       Uri.parse(url),
       body: json.encode(
         {
@@ -143,14 +145,50 @@ class User extends ChangeNotifier {
   Future<void> addLecturer({type, name, course, email, password, id}) async {
     final url =
         'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/$type/$id.json';
-    await http.post(Uri.parse(url),
-        body: json.encode({
+    await http.put(
+      Uri.parse(url),
+      body: json.encode(
+        {
           'type': type,
           'name': name,
           'password': password,
           'email': email,
           'id': id,
           'course': course
-        }));
+        },
+      ),
+    );
+  }
+
+  Future<bool> searchUsers(String wanted) async {
+    if (wanted != '' || wanted != ' ') {
+      final url =
+          'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/.json';
+      final response = await http.get(
+        Uri.parse(url),
+      );
+      var data = json.decode(response.body) as Map<String, dynamic>;
+      // print(data);
+      suggestions.removeRange(0, suggestions.length);
+      data.forEach(
+        (a, value) {
+          var body = value as Map<dynamic, dynamic>;
+          body.forEach(
+            (key, value) {
+              print(value['name']);
+              String temp = value['name'];
+              temp.toLowerCase();
+              wanted.toLowerCase();
+              if (temp.contains(wanted)) {
+                suggestions.add(temp);
+                notifyListeners();
+              }
+            },
+          );
+        },
+      );
+    }
+
+    return false;
   }
 }
