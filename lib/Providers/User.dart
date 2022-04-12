@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:fyp/models/Assignment.dart';
-import 'package:fyp/screens/Admin/searchUser.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/Course.dart';
@@ -15,7 +14,7 @@ class User extends ChangeNotifier {
   List<Course> courses = [];
   int credits = 0;
   double cgpa = 0;
-  List<String> suggestions = [];
+  List<Map<dynamic, dynamic>> suggestions = [];
 
   User({
     required this.Name,
@@ -25,8 +24,6 @@ class User extends ChangeNotifier {
   });
 
   Future<bool> Login(email, password, type) async {
-    print(email + password);
-
     bool found = false;
 
     var url =
@@ -35,17 +32,19 @@ class User extends ChangeNotifier {
 
     var data = json.decode(response.body) as Map<String, dynamic>;
 
-    data.forEach((id, structure) {
-      if (email == structure['email'] && password == structure['password']) {
-        this.id = id;
-        this.Email = structure['email'];
-        this.Name = structure['name'];
-        this.credits = structure['credits'];
-        this.cgpa = structure['cgpa'];
+    data.forEach(
+      (id, structure) {
+        if (email == structure['email'] && password == structure['password']) {
+          this.id = id;
+          this.Email = structure['email'];
+          this.Name = structure['name'];
+          this.credits = structure['credits'];
+          this.cgpa = structure['cgpa'];
 
-        found = true;
-      }
-    });
+          found = true;
+        }
+      },
+    );
 
     return found;
   }
@@ -169,18 +168,20 @@ class User extends ChangeNotifier {
       );
       var data = json.decode(response.body) as Map<String, dynamic>;
       // print(data);
-      suggestions.removeRange(0, suggestions.length);
+      suggestions.clear();
       data.forEach(
         (a, value) {
           var body = value as Map<dynamic, dynamic>;
           body.forEach(
             (key, value) {
-              print(value['name']);
               String temp = value['name'];
               temp.toLowerCase();
               wanted.toLowerCase();
               if (temp.contains(wanted)) {
-                suggestions.add(temp);
+                suggestions.add(
+                  {'name': temp, 'id': key, 'type': value['type']},
+                );
+
                 notifyListeners();
               }
             },

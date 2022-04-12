@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fyp/screens/Admin/edit_user.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 import '../../Providers/User.dart';
+import '../../models/Course.dart';
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);
@@ -115,20 +120,59 @@ class _SearchState extends State<Search> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: 10,
+              ),
               Center(
                 child: isLoading
-                      ? const CircularProgressIndicator() : SizedBox(
-                  height: Media.size.height * .8,
-                  width: Media.size.width * 85,
-                  child: ListView.builder(
-                    itemCount: user.suggestions.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return ListTile(
-                        title: Text(user.suggestions[index]),
-                      );
-                    },
-                  ),
-                ),
+                    ? const CircularProgressIndicator()
+                    : SizedBox(
+                        height: Media.size.height * .8,
+                        width: Media.size.width * .8,
+                        child: ListView.builder(
+                          itemCount: user.suggestions.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ListTile(
+                              title: Text(
+                                user.suggestions[index]['name'],
+                              ),
+                              trailing: Text(
+                                user.suggestions[index]['type'],
+                              ),
+                              onTap: () async {
+                                List courses = [];
+                                final url =
+                                    'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/${user.suggestions[index]['id']}.json';
+                                final response = await http.get(Uri.parse(url));
+
+                                var data = json.decode(response.body)
+                                    as Map<dynamic, dynamic>;
+
+                                var coursesdata =
+                                    data['courses'] as Map<dynamic, dynamic>;
+                                coursesdata.forEach((key, value) {
+                                  var course = Course(
+                                      Credit: value['credits'],
+                                      Name: value['name'],
+                                      id: key,
+                                      Mark: value['mark']);
+
+                                  courses.add(course);
+                                });
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditUser(
+                                      data: data,
+                                      courses: courses,
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
               ),
             ],
           ),
