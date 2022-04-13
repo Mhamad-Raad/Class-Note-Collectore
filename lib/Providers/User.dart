@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:fyp/models/Assignment.dart';
 import 'package:http/http.dart' as http;
 
+import '../Services/HttpException.dart';
 import '../models/Course.dart';
 
 class User extends ChangeNotifier {
@@ -160,7 +161,8 @@ class User extends ChangeNotifier {
   }
 
   Future<bool> searchUsers(String wanted) async {
-    if (wanted != '' || wanted != ' ') {
+    if (wanted != '' && wanted != ' ') {
+      wanted.toLowerCase();
       final url =
           'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/.json';
       final response = await http.get(
@@ -176,7 +178,7 @@ class User extends ChangeNotifier {
             (key, value) {
               String temp = value['name'];
               temp.toLowerCase();
-              wanted.toLowerCase();
+              print(wanted + temp);
               if (temp.contains(wanted)) {
                 suggestions.add(
                   {'name': temp, 'id': key, 'type': value['type']},
@@ -191,5 +193,27 @@ class User extends ChangeNotifier {
     }
 
     return false;
+  }
+
+// users should be changed to value['type'] which you send via parameter later;
+  Future<void> deleteCourse(courseId, courseIndex, userid) async {
+    print(courseId);
+
+    notifyListeners();
+    final url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/$userid/courses/$courseId.json';
+
+    final r = await http.delete(
+      Uri.parse(url),
+    );
+    // .then((response) => () {
+    //       if (response.statusCode >= 400) {
+    //         throw httpException("Connection error");
+    //       }
+    //     })
+    // .catchError(
+    //   (_) {},
+    // );
+    print(r.body);
   }
 }

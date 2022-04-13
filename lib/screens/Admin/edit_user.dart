@@ -6,15 +6,21 @@ import '../../Providers/User.dart';
 
 class EditUser extends StatefulWidget {
   var data;
-  var courses;
-  EditUser({Key? key, required this.data, required this.courses})
-      : super(key: key);
+  List courses;
+  var userid;
+  EditUser({
+    Key? key,
+    required this.data,
+    required this.courses,
+    required this.userid,
+  }) : super(key: key);
 
   @override
   State<EditUser> createState() => _EditUserState();
 }
 
 class _EditUserState extends State<EditUser> {
+  var loading = false;
   @override
   Widget build(BuildContext context) {
     final Media = MediaQuery.of(context);
@@ -57,130 +63,203 @@ class _EditUserState extends State<EditUser> {
       body: SizedBox(
         height: Media.size.height * 2,
         width: Media.size.width,
-        child: Column(
-          children: [
-            SizedBox(
-              height: Media.size.height * .02,
-            ),
-            Container(
-              width: 100,
-              height: 100,
-              decoration: const BoxDecoration(
-                color: Color.fromRGBO(157, 163, 255, 1),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(200),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: Media.size.height * .02,
+              ),
+              Container(
+                width: 100,
+                height: 100,
+                decoration: const BoxDecoration(
+                  color: Color.fromRGBO(157, 163, 255, 1),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(200),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              width: Media.size.width * .8,
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "please insert you Password";
-                      }
-
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Color.fromRGBO(124, 131, 254, 1),
-                        ),
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "please insert you Password";
-                      }
-
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Color.fromRGBO(124, 131, 254, 1),
-                        ),
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "please insert you Password";
-                      }
-
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Color.fromRGBO(124, 131, 254, 1),
-                        ),
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  SizedBox(
-                    width: Media.size.width * .7,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text("Courses"),
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: const [
-                              Icon(Icons.add),
-                              Text("ADD"),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: Media.size.width,
-                    height: 2,
-                    color: Colors.grey[400],
-                  ),
-                  SizedBox(
-                    height: Media.size.height * .1,
-                    child: ListView.builder(
-                      itemCount: widget.courses.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ListTile(
-                          leading: Text("${widget.courses[index].Name}"),
-                        );
-                      },
-                    ),
-                  ),
-                ],
+              const SizedBox(
+                height: 10,
               ),
-            ),
-          ],
+              SizedBox(
+                width: Media.size.width * .8,
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "please insert you Password";
+                        }
+
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Color.fromRGBO(124, 131, 254, 1),
+                          ),
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "please insert you Password";
+                        }
+
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Color.fromRGBO(124, 131, 254, 1),
+                          ),
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "please insert you Password";
+                        }
+
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Color.fromRGBO(124, 131, 254, 1),
+                          ),
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    SizedBox(
+                      width: Media.size.width * .7,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Courses"),
+                          ElevatedButton(
+                            onPressed: () {},
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: const [
+                                Icon(Icons.add),
+                                Text("ADD"),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: Media.size.width,
+                      height: 2,
+                      color: Colors.grey[400],
+                    ),
+                    SizedBox(
+                      height: Media.size.height * .15,
+                      child: ListView.builder(
+                        itemCount: widget.courses.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ListTile(
+                            leading: Text("${widget.courses[index].Name}"),
+                            trailing: loading
+                                ? CircularProgressIndicator()
+                                : IconButton(
+                                    onPressed: () async {
+                                      setState(() {
+                                        loading = true;
+                                      });
+                                      try {
+                                        await user.deleteCourse(
+                                          widget.courses[index].id,
+                                          index,
+                                          widget.userid,
+                                        );
+                                        setState(() {
+                                          loading = false;
+                                          widget.courses.removeAt(index);
+                                        });
+
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            onVisible: () {
+                                              setState(() {
+                                                loading = false;
+                                              });
+                                            },
+                                            content: const Text(
+                                                'Deleted successfuly'),
+                                            action: SnackBarAction(
+                                              label: 'ok',
+                                              onPressed: () {
+                                                setState(() {
+                                                  loading = false;
+                                                });
+                                                ScaffoldMessenger.of(context)
+                                                    .clearSnackBars();
+                                              },
+                                            ),
+                                          ),
+                                        );
+                                      } catch (error) {
+                                        // print(error);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            onVisible: () {
+                                              setState(() {
+                                                loading = false;
+                                              });
+                                            },
+                                            content: const Text(
+                                                'Failed to delete the course'),
+                                            action: SnackBarAction(
+                                              label: 'ok',
+                                              onPressed: () {
+                                                setState(() {
+                                                  loading = false;
+                                                });
+                                                ScaffoldMessenger.of(context)
+                                                    .clearSnackBars();
+                                              },
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -141,6 +141,7 @@ class _SearchState extends State<Search> {
                               ),
                               onTap: () async {
                                 List courses = [];
+                                // users should be changed to user.suggestions[index][type] later;
                                 final url =
                                     'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/${user.suggestions[index]['id']}.json';
                                 final response = await http.get(Uri.parse(url));
@@ -152,10 +153,11 @@ class _SearchState extends State<Search> {
                                     data['courses'] as Map<dynamic, dynamic>;
                                 coursesdata.forEach((key, value) {
                                   var course = Course(
-                                      Credit: value['credits'],
-                                      Name: value['name'],
-                                      id: key,
-                                      Mark: value['mark']);
+                                    Credit: value['credits'],
+                                    Name: value['name'],
+                                    id: key,
+                                    Mark: value['mark'],
+                                  );
 
                                   courses.add(course);
                                 });
@@ -165,6 +167,7 @@ class _SearchState extends State<Search> {
                                     builder: (context) => EditUser(
                                       data: data,
                                       courses: courses,
+                                      userid: user.suggestions[index]['id'],
                                     ),
                                   ),
                                 );
