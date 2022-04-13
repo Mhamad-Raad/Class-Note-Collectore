@@ -1,7 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fyp/screens/Admin/Admin_Add_User.dart';
 import 'package:fyp/screens/Admin/edit_user.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -180,6 +180,20 @@ class _SearchState extends State<Search> {
               ),
             ],
           ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color.fromRGBO(124, 131, 253, 1),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddUser(),
+            ),
+          );
+        },
+        child: const Icon(
+          Icons.add,
         ),
       ),
     );

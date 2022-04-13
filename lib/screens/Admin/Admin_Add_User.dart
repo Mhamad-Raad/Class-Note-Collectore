@@ -37,15 +37,15 @@ class _AddUserState extends State<AddUser> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        leading: const Center(
-          child: Text(
-            "QIU",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            FontAwesomeIcons.angleLeft,
+            color: Colors.black,
           ),
         ),
-        automaticallyImplyLeading: false,
         actions: [
           Container(
             margin: const EdgeInsets.only(
@@ -67,7 +67,7 @@ class _AddUserState extends State<AddUser> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               SizedBox(
