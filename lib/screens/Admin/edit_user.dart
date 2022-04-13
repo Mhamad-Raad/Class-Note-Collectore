@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fyp/models/Course.dart';
 import 'package:provider/provider.dart';
 
 import '../../Providers/User.dart';
@@ -20,7 +21,23 @@ class EditUser extends StatefulWidget {
 }
 
 class _EditUserState extends State<EditUser> {
+  var addLoading = false;
   var loading = false;
+  late Map data;
+  late List<Map> dataname;
+  var nameController = TextEditingController();
+  var passwordController = TextEditingController();
+  var cgpaController = TextEditingController();
+
+  @override
+  void initState() {
+    cgpaController.text = widget.data['cgpa'].toString();
+    passwordController.text = widget.data['password'];
+    nameController.text = widget.data['name'];
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Media = MediaQuery.of(context);
@@ -36,24 +53,50 @@ class _EditUserState extends State<EditUser> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        leading: const Center(
-          child: Text(
-            "QIU",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            FontAwesomeIcons.angleLeft,
+            color: Colors.black,
           ),
         ),
-        automaticallyImplyLeading: false,
         actions: [
           Container(
             margin: const EdgeInsets.only(
               right: 10,
             ),
-            child: const IconButton(
-              onPressed: null,
-              icon: Icon(
-                FontAwesomeIcons.graduationCap,
+            child: IconButton(
+              onPressed: () async {
+                await user.updateUsernameAndCgpaAndPassword(
+                    name: nameController.text,
+                    passowrd: passwordController.text,
+                    cgpa: cgpaController.text,
+                    userid: widget.userid);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    onVisible: () {
+                      setState(() {
+                        loading = false;
+                      });
+                    },
+                    content: const Text('Upated'),
+                    duration: const Duration(seconds: 1),
+                    action: SnackBarAction(
+                      label: 'ok',
+                      onPressed: () {
+                        setState(() {
+                          loading = false;
+                        });
+                        ScaffoldMessenger.of(context).clearSnackBars();
+                      },
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(
+                FontAwesomeIcons.floppyDisk,
                 color: Colors.black,
               ),
             ),
@@ -89,15 +132,10 @@ class _EditUserState extends State<EditUser> {
                     const SizedBox(
                       height: 10,
                     ),
-                    TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "please insert you Password";
-                        }
-
-                        return null;
-                      },
+                    TextField(
+                      controller: nameController,
                       decoration: InputDecoration(
+                        label: const Text("Name"),
                         border: OutlineInputBorder(
                           borderSide: const BorderSide(
                             color: Color.fromRGBO(124, 131, 254, 1),
@@ -109,15 +147,10 @@ class _EditUserState extends State<EditUser> {
                     const SizedBox(
                       height: 10,
                     ),
-                    TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "please insert you Password";
-                        }
-
-                        return null;
-                      },
+                    TextField(
+                      controller: passwordController,
                       decoration: InputDecoration(
+                        label: const Text("Password"),
                         border: OutlineInputBorder(
                           borderSide: const BorderSide(
                             color: Color.fromRGBO(124, 131, 254, 1),
@@ -129,15 +162,11 @@ class _EditUserState extends State<EditUser> {
                     const SizedBox(
                       height: 10,
                     ),
-                    TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "please insert you Password";
-                        }
-
-                        return null;
-                      },
+                    TextField(
+                      keyboardType: TextInputType.number,
+                      controller: cgpaController,
                       decoration: InputDecoration(
+                        label: const Text("CGPA"),
                         border: OutlineInputBorder(
                           borderSide: const BorderSide(
                             color: Color.fromRGBO(124, 131, 254, 1),
@@ -155,16 +184,183 @@ class _EditUserState extends State<EditUser> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text("Courses"),
-                          ElevatedButton(
-                            onPressed: () {},
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: const [
-                                Icon(Icons.add),
-                                Text("ADD"),
-                              ],
-                            ),
-                          ),
+                          addLoading
+                              ? const CircularProgressIndicator()
+                              : ElevatedButton(
+                                  onPressed: () async {
+                                    dataname = [];
+                                    data = {};
+                                    setState(() {
+                                      addLoading = true;
+                                    });
+                                    Object? chosen = "Courses";
+                                    var te = await user.getAllCourses();
+                                    setState(() {
+                                      data = te;
+                                    });
+
+                                    bool Have = false;
+                                    if (data.isNotEmpty) {
+                                      data.forEach((key, value) {
+                                        Have = false;
+                                        String temp = value['name'];
+                                        for (int index = 0;
+                                            index < widget.courses.length;
+                                            index++) {
+                                          if (temp ==
+                                              widget.courses[index].Name) {
+                                            Have = true;
+                                          }
+                                        }
+                                        if (!Have) {
+                                          setState(() {
+                                            dataname.add({
+                                              'id': key,
+                                              'name': value["name"],
+                                              'credits': value['credits'],
+                                              'progress': value['progress'],
+                                              'mark': value['mark'],
+                                              'weeks': value['weeks'],
+                                              'chosen': false
+                                            });
+                                          });
+                                        }
+                                      });
+                                      setState(() {
+                                        addLoading = false;
+                                      });
+                                      print(dataname);
+
+                                      if (dataname.isEmpty) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text("Confirm"),
+                                                )
+                                              ],
+                                              title: const Text('Failed'),
+                                              content: const SizedBox(
+                                                height: 100,
+                                                width: 100,
+                                                child: Text(
+                                                    'The user already has all the courses'),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    }
+                                    if (dataname.isNotEmpty) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return StatefulBuilder(
+                                            builder: (context, setState) {
+                                              return AlertDialog(
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text(
+                                                      "Cancel",
+                                                      style: TextStyle(
+                                                          color: Colors.red),
+                                                    ),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () async {
+                                                      for (int i = 0;
+                                                          i < dataname.length;
+                                                          i++) {
+                                                        if (dataname[i]
+                                                                ['chosen'] ==
+                                                            true) {
+                                                          await user
+                                                              .addCourseToUser(
+                                                                  widget.userid,
+                                                                  dataname[i]);
+                                                          super.setState(() {
+                                                            widget.courses.add(Course(
+                                                                Name: dataname[
+                                                                    i]['name'],
+                                                                Credit: dataname[
+                                                                        i]
+                                                                    ['credits'],
+                                                                Mark: dataname[
+                                                                    i]['mark'],
+                                                                id: dataname[i]
+                                                                    ['id']));
+                                                          });
+                                                        }
+                                                      }
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text(
+                                                      "Confirm",
+                                                      style: TextStyle(
+                                                          color: Colors.green),
+                                                    ),
+                                                  )
+                                                ],
+                                                title: const Text(
+                                                  "Courses",
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                content: SizedBox(
+                                                  width: 100,
+                                                  height: 100,
+                                                  child: ListView.builder(
+                                                    itemCount: dataname.length,
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            index) {
+                                                      return ListTile(
+                                                        leading: Text(
+                                                          dataname[index]
+                                                              ['name'],
+                                                        ),
+                                                        trailing: Checkbox(
+                                                          onChanged:
+                                                              (bool? value) {
+                                                            setState(() {
+                                                              dataname[index][
+                                                                      'chosen'] =
+                                                                  !dataname[
+                                                                          index]
+                                                                      [
+                                                                      'chosen'];
+                                                            });
+                                                          },
+                                                          value: dataname[index]
+                                                              ['chosen'],
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: const [
+                                      Icon(Icons.add),
+                                      Text("ADD"),
+                                    ],
+                                  ),
+                                ),
                         ],
                       ),
                     ),
@@ -181,7 +377,7 @@ class _EditUserState extends State<EditUser> {
                           return ListTile(
                             leading: Text("${widget.courses[index].Name}"),
                             trailing: loading
-                                ? CircularProgressIndicator()
+                                ? const CircularProgressIndicator()
                                 : IconButton(
                                     onPressed: () async {
                                       setState(() {

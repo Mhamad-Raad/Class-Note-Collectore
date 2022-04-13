@@ -161,7 +161,8 @@ class _SearchState extends State<Search> {
 
                                   courses.add(course);
                                 });
-                                Navigator.pushReplacement(
+                                print(data);
+                                Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => EditUser(

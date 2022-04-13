@@ -163,7 +163,7 @@ class User extends ChangeNotifier {
   Future<bool> searchUsers(String wanted) async {
     if (wanted != '' && wanted != ' ') {
       wanted = wanted.toLowerCase();
-      final url =
+      const url =
           'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/.json';
       final response = await http.get(
         Uri.parse(url),
@@ -178,10 +178,16 @@ class User extends ChangeNotifier {
             (key, value) {
               String temp = value['name'];
               temp = temp.toLowerCase();
-              print(wanted + temp);
+
               if (temp.contains(wanted)) {
                 suggestions.add(
-                  {'name': value['name'], 'id': key, 'type': value['type']},
+                  {
+                    'name': value['name'],
+                    'id': key,
+                    'type': value['type'],
+                    'credits': value['credits'],
+                    'cgpa': value['cgpa']
+                  },
                 );
 
                 notifyListeners();
@@ -203,7 +209,7 @@ class User extends ChangeNotifier {
     final url =
         'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/$userid/courses/$courseId.json';
 
-    final r = await http.delete(
+    await http.delete(
       Uri.parse(url),
     );
     // .then((response) => () {
@@ -214,6 +220,46 @@ class User extends ChangeNotifier {
     // .catchError(
     //   (_) {},
     // );
-    print(r.body);
+  }
+
+  getAllCourses() async {
+    final url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/courses.json';
+
+    final response = await http.get(
+      Uri.parse(url),
+    );
+
+    var data = json.decode(response.body) as Map<dynamic, dynamic>;
+    return data;
+  }
+
+  Future addCourseToUser(userid, course) async {
+    final url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/$userid/courses/${course['id']}.json';
+
+    await http.put(
+      Uri.parse(url),
+      body: json.encode({
+        'name': course['name'],
+        'mark': course['mark'],
+        'weeks': course['weeks'],
+        'progree': course['progress'],
+        'credits': course['credits']
+      }),
+    );
+  }
+
+  Future updateUsernameAndCgpaAndPassword(
+      {name, passowrd, cgpa, userid}) async {
+    print(userid);
+    final url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/$userid.json';
+    await http.patch(
+      Uri.parse(url),
+      body: json.encode(
+        {'name': name, 'password': passowrd, 'cgpa': cgpa},
+      ),
+    );
   }
 }
