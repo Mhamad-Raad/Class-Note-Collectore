@@ -162,7 +162,7 @@ class User extends ChangeNotifier {
 
   Future<bool> searchUsers(String wanted) async {
     if (wanted != '' && wanted != ' ') {
-      wanted.toLowerCase();
+      wanted = wanted.toLowerCase();
       final url =
           'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/.json';
       final response = await http.get(
@@ -177,11 +177,11 @@ class User extends ChangeNotifier {
           body.forEach(
             (key, value) {
               String temp = value['name'];
-              temp.toLowerCase();
+              temp = temp.toLowerCase();
               print(wanted + temp);
               if (temp.contains(wanted)) {
                 suggestions.add(
-                  {'name': temp, 'id': key, 'type': value['type']},
+                  {'name': value['name'], 'id': key, 'type': value['type']},
                 );
 
                 notifyListeners();
