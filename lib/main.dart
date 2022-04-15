@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp/Providers/User.dart';
 import 'package:fyp/screens/Admin/Admin_Add_User.dart';
 import 'package:fyp/screens/Admin/searchUser.dart';
-import 'package:fyp/screens/profile.dart';
+import 'package:fyp/screens/Student/profile.dart';
 import 'package:provider/provider.dart';
 
 import './screens/Login.dart';

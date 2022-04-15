@@ -4,7 +4,7 @@ import 'package:fyp/screens/Student/CourseDetails.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../Providers/User.dart';
+import '../../Providers/User.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);

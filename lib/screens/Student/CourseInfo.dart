@@ -5,7 +5,7 @@ import 'package:fyp/screens/Student/CourseDetails.dart';
 import 'package:provider/provider.dart';
 
 import '../../Providers/User.dart';
-import '../profile.dart';
+import 'profile.dart';
 
 class CourseInfo extends StatelessWidget {
   late int index;
