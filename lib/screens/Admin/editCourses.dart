@@ -10,15 +10,15 @@ import '../../Providers/User.dart';
 
 class EditCourses extends StatefulWidget {
   List<Map> courses;
-  List id;
-  EditCourses({Key? key, required this.courses, required this.id})
-      : super(key: key);
+
+  EditCourses({Key? key, required this.courses}) : super(key: key);
 
   @override
   State<EditCourses> createState() => _EditCoursesState();
 }
 
 class _EditCoursesState extends State<EditCourses> {
+  bool delete = false;
   final _formKey = GlobalKey<FormState>();
   var nameController = TextEditingController();
   final creditsCotnroller = TextEditingController();
@@ -106,18 +106,20 @@ class _EditCoursesState extends State<EditCourses> {
                                   ),
                                 ),
                                 TextButton(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     Random random = Random();
                                     int randomNumber = random.nextInt(10000);
+
                                     var course = {
                                       'name': nameController.text,
-                                      'credits': creditsCotnroller.text,
-                                      'id': randomNumber.toString(),
+                                      'credits':
+                                          int.parse(creditsCotnroller.text),
+                                      'id': randomNumber,
                                       'weeks': 0,
                                       'progress': 100,
                                       'mark': 0
                                     };
-                                    user.addAcourse(course);
+                                    await user.addAcourse(course);
                                     setState(() {
                                       widget.courses.add(course);
                                     });
@@ -222,8 +224,14 @@ class _EditCoursesState extends State<EditCourses> {
                         ),
                       ),
                     ),
-                    onPressed: () {},
-                    child: const Text("Delete Courses"),
+                    onPressed: () {
+                      setState(() {
+                        delete = !delete;
+                      });
+                    },
+                    child: delete
+                        ? const Text("Done")
+                        : const Text("Delete Courses"),
                   ),
                 ],
               ),
@@ -272,18 +280,33 @@ class _EditCoursesState extends State<EditCourses> {
                                   Text(
                                     widget.courses[index]['name'],
                                   ),
-                                  IconButton(
-                                    icon: Icon(
-                                      (v[index] == true)
-                                          ? FontAwesomeIcons.angleDown
-                                          : FontAwesomeIcons.angleRight,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        v[index] = !v[index];
-                                      });
-                                    },
-                                  )
+                                  delete
+                                      ? IconButton(
+                                          onPressed: () async {
+                                            await user.deleteAcourse(
+                                              widget.courses[index]['id'],
+                                            );
+                                            setState(() {
+                                              widget.courses.removeAt(index);
+                                            });
+                                          },
+                                          icon: const Icon(
+                                            Icons.delete,
+                                            color: Colors.red,
+                                          ),
+                                        )
+                                      : IconButton(
+                                          icon: Icon(
+                                            (v[index] == true)
+                                                ? FontAwesomeIcons.angleDown
+                                                : FontAwesomeIcons.angleRight,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              v[index] = !v[index];
+                                            });
+                                          },
+                                        )
                                 ],
                               ),
                             ),

@@ -210,20 +210,26 @@ class _SearchState extends State<Search> {
             );
           }
           if (val == 1) {
-            Map data = await user.getAllCourses();
+            Map data = await user.getAllCourses() ?? {};
             List<Map> courses = [];
-            List id = [];
-            data.forEach((key, value) {
-              courses.add(value);
-              id.add(key);
-            });
+
+            data.forEach(
+              (key, value) {
+                courses.add(
+                  {
+                    'name': value['name'],
+                    'credits': value['credits'],
+                    'id': key,
+                  },
+                );
+              },
+            );
 
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => EditCourses(
                   courses: courses,
-                  id: id,
                 ),
               ),
             );

@@ -222,16 +222,17 @@ class User extends ChangeNotifier {
 
   Future deleteAcourse(courseid) async {
     final url =
-        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/courses/$courseId.json';
-    await http.delete(
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/courses/$courseid.json';
+    var response = await http.delete(
       Uri.parse(url),
     );
+    print(response.body);
   }
 
-  Future addAcourse(course)async{
-     final url =
+  Future addAcourse(course) async {
+    final url =
         'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/courses/${course['id']}.json';
-        await http.put(
+    var response = await http.put(
       Uri.parse(url),
       body: json.encode({
         'name': course['name'],
@@ -241,7 +242,7 @@ class User extends ChangeNotifier {
         'credits': course['credits'],
       }),
     );
-
+    print(response.body);
   }
 
   getAllCourses() async {
@@ -251,9 +252,12 @@ class User extends ChangeNotifier {
     final response = await http.get(
       Uri.parse(url),
     );
-
-    var data = json.decode(response.body) as Map<dynamic, dynamic>;
-    return data;
+    try {
+      var data = json.decode(response.body) as Map<dynamic, dynamic>;
+      return data;
+    } catch (e) {
+      print(12342);
+    }
   }
 
   Future addCourseToUser(userid, course) async {
