@@ -32,7 +32,7 @@ class _MyAPPState extends State<MyAPP> {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Search(),
+        home: Login(),
       ),
     );
   }

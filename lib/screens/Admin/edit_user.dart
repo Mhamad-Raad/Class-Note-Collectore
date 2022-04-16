@@ -384,7 +384,7 @@ class _EditUserState extends State<EditUser> {
                                         loading = true;
                                       });
                                       try {
-                                        await user.deleteCourse(
+                                        await user.deleteuserCourse(
                                           widget.courses[index].id,
                                           index,
                                           widget.userid,

@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../Providers/User.dart';
+import 'editCourses.dart';
+import 'searchUser.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -205,12 +207,31 @@ class _ProfileState extends State<Profile> {
         backgroundColor: const Color.fromRGBO(124, 131, 253, 1),
         selectedItemColor: Colors.amber,
         currentIndex: 0,
-        onTap: (val) {
+        onTap: (val) async {
           if (val == 1) {
+            Map data = await user.getAllCourses();
+            List<Map> courses = [];
+            List id = [];
+            data.forEach((key, value) {
+              courses.add(value);
+              id.add(key);
+            });
+           
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const CoursesDetails(),
+                builder: (context) => EditCourses(
+                  courses: courses,
+                  id: id,
+                ),
+              ),
+            );
+          }
+          if (val == 2) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Search(),
               ),
             );
           }

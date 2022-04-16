@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fyp/screens/Admin/Admin_Add_User.dart';
+import 'package:fyp/screens/Admin/Profile.dart';
 import 'package:fyp/screens/Admin/edit_user.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 import '../../Providers/User.dart';
 import '../../models/Course.dart';
+import 'editCourses.dart';
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);
@@ -83,8 +85,6 @@ class _SearchState extends State<Search> {
                         isLoading = false;
                       });
                     });
-
-                    print(user.suggestions);
                   },
                   controller: searchController,
                   decoration: InputDecoration(
@@ -120,7 +120,7 @@ class _SearchState extends State<Search> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Center(
@@ -195,6 +195,56 @@ class _SearchState extends State<Search> {
         child: const Icon(
           Icons.add,
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color.fromRGBO(124, 131, 253, 1),
+        selectedItemColor: Colors.amber,
+        currentIndex: 2,
+        onTap: (val) async {
+          if (val == 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Profile(),
+              ),
+            );
+          }
+          if (val == 1) {
+            Map data = await user.getAllCourses();
+            List<Map> courses = [];
+            List id = [];
+            data.forEach((key, value) {
+              courses.add(value);
+              id.add(key);
+            });
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditCourses(
+                  courses: courses,
+                  id: id,
+                ),
+              ),
+            );
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(
+              FontAwesomeIcons.graduationCap,
+            ),
+            label: "Profile",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.timeline),
+            label: "Course",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.group),
+            label: "Groups",
+          )
+        ],
       ),
     );
   }

@@ -40,7 +40,7 @@ class User extends ChangeNotifier {
           this.Email = structure['email'];
           this.Name = structure['name'];
           this.credits = structure['credits'];
-          this.cgpa = structure['cgpa'];
+          this.cgpa = double.parse(structure['cgpa']);
 
           found = true;
         }
@@ -202,9 +202,7 @@ class User extends ChangeNotifier {
   }
 
 // users should be changed to value['type'] which you send via parameter later;
-  Future<void> deleteCourse(courseId, courseIndex, userid) async {
-    print(courseId);
-
+  Future<void> deleteuserCourse(courseId, courseIndex, userid) async {
     notifyListeners();
     final url =
         'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/$userid/courses/$courseId.json';
@@ -220,6 +218,30 @@ class User extends ChangeNotifier {
     // .catchError(
     //   (_) {},
     // );
+  }
+
+  Future deleteAcourse(courseid) async {
+    final url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/courses/$courseId.json';
+    await http.delete(
+      Uri.parse(url),
+    );
+  }
+
+  Future addAcourse(course)async{
+     final url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/courses/${course['id']}.json';
+        await http.put(
+      Uri.parse(url),
+      body: json.encode({
+        'name': course['name'],
+        'mark': course['mark'],
+        'weeks': course['weeks'],
+        'progree': course['progress'],
+        'credits': course['credits'],
+      }),
+    );
+
   }
 
   getAllCourses() async {

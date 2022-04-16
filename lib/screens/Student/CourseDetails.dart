@@ -56,209 +56,170 @@ class _CoursesDetailsState extends State<CoursesDetails> {
       body: SizedBox(
         width: Media.size.width,
         height: Media.size.height,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    side: const BorderSide(
-                      width: 2.0,
-                      color: Color.fromRGBO(124, 131, 253, 1),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(32.0),
-                    ),
-                  ),
-                  onPressed: () {},
-                  child: const Text("Add Courses"),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    side: const BorderSide(
-                      width: 2.0,
-                      color: Color.fromRGBO(124, 131, 253, 1),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(32.0),
-                    ),
-                  ),
-                  onPressed: () {},
-                  child: const Text("Delete Courses"),
-                ),
-              ],
-            ),
-            Center(
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
-                height: Media.size.height * .7,
-                width: Media.size.width * .9,
-                decoration: const BoxDecoration(
-                  color: Color.fromRGBO(242, 250, 255, .63),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(50),
-                  ),
-                ),
-                child: ListView.builder(
-                  itemCount: user.courses.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 7),
-                            height: Media.size.height * .7 * .11,
-                            width: Media.size.width * .9 * .9,
-                            margin: const EdgeInsets.only(top: 20),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: (v[index] == true)
-                                  ? const BorderRadius.only(
-                                      topLeft: Radius.circular(30),
-                                      topRight: Radius.circular(30),
-                                    )
-                                  : const BorderRadius.all(
-                                      Radius.circular(50),
-                                    ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  user.courses[index].Name,
-                                ),
-                                IconButton(
-                                  icon: Icon(
-                                    (v[index] == true)
-                                        ? FontAwesomeIcons.angleDown
-                                        : FontAwesomeIcons.angleRight,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      v[index] = !v[index];
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                          ),
-                          (v[index] == true)
-                              ? Container(
-                                  height: Media.size.height * .7 * .3,
-                                  width: Media.size.width * .9 * .9,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(30),
-                                      bottomRight: Radius.circular(30),
-                                    ),
-                                  ),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 70),
-                                    height: 200,
-                                    child: Column(
-                                      children: [
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            const Text(
-                                              "Assignments: ",
-                                            ),
-                                            Text(user.courses[index].assignments
-                                                .length
-                                                .toString())
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            const Text(
-                                              "Mark: ",
-                                              textAlign: TextAlign.start,
-                                            ),
-                                            Text(
-                                              user.courses[index].Mark
-                                                  .toString(),
-                                            )
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            const Text(
-                                              "progress: ",
-                                              textAlign: TextAlign.start,
-                                            ),
-                                            Consumer<User>(
-                                              builder: (BuildContext context,
-                                                  value, Widget? child) {
-                                                return Text(
-                                                  user.courses[index].progress
-                                                          .toString() +
-                                                      "%",
-                                                );
-                                              },
-                                            )
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            const Text(
-                                              "Credit: ",
-                                              textAlign: TextAlign.start,
-                                            ),
-                                            Text(
-                                              user.courses[index].Credit
-                                                  .toString(),
-                                            )
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 15,
-                                        ),
-                                        ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            primary: const Color.fromRGBO(
-                                                124, 131, 253, 1),
-                                          ),
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CourseInfo(
-                                                  index: index,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          child: const Text("View Course"),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              : Container()
-                        ],
-                      ),
-                    );
-                  },
-                ),
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
+            height: Media.size.height * .7,
+            width: Media.size.width * .9,
+            decoration: const BoxDecoration(
+              color: Color.fromRGBO(242, 250, 255, .63),
+              borderRadius: BorderRadius.all(
+                Radius.circular(50),
               ),
             ),
-          ],
+            child: ListView.builder(
+              itemCount: user.courses.length,
+              itemBuilder: (BuildContext context, int index) {
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 7),
+                        height: Media.size.height * .7 * .11,
+                        width: Media.size.width * .9 * .9,
+                        margin: const EdgeInsets.only(top: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: (v[index] == true)
+                              ? const BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                  topRight: Radius.circular(30),
+                                )
+                              : const BorderRadius.all(
+                                  Radius.circular(50),
+                                ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              user.courses[index].Name,
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                (v[index] == true)
+                                    ? FontAwesomeIcons.angleDown
+                                    : FontAwesomeIcons.angleRight,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  v[index] = !v[index];
+                                });
+                              },
+                            )
+                          ],
+                        ),
+                      ),
+                      (v[index] == true)
+                          ? Container(
+                              height: Media.size.height * .7 * .3,
+                              width: Media.size.width * .9 * .9,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(30),
+                                  bottomRight: Radius.circular(30),
+                                ),
+                              ),
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 70),
+                                height: 200,
+                                child: Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          "Assignments: ",
+                                        ),
+                                        Text(user
+                                            .courses[index].assignments.length
+                                            .toString())
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          "Mark: ",
+                                          textAlign: TextAlign.start,
+                                        ),
+                                        Text(
+                                          user.courses[index].Mark.toString(),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          "progress: ",
+                                          textAlign: TextAlign.start,
+                                        ),
+                                        Consumer<User>(
+                                          builder: (BuildContext context, value,
+                                              Widget? child) {
+                                            return Text(
+                                              user.courses[index].progress
+                                                      .toString() +
+                                                  "%",
+                                            );
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          "Credit: ",
+                                          textAlign: TextAlign.start,
+                                        ),
+                                        Text(
+                                          user.courses[index].Credit.toString(),
+                                        )
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        primary: const Color.fromRGBO(
+                                            124, 131, 253, 1),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => CourseInfo(
+                                              index: index,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: const Text("View Course"),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : Container()
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
