@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:fyp/models/Assignment.dart';
 import 'package:http/http.dart' as http;
-
-import '../Services/HttpException.dart';
 import '../models/Course.dart';
 
 class User extends ChangeNotifier {
@@ -16,6 +14,7 @@ class User extends ChangeNotifier {
   int credits = 0;
   double cgpa = 0;
   List<Map<dynamic, dynamic>> suggestions = [];
+   int numberofStudents =0;
 
   User({
     required this.Name,
@@ -36,6 +35,9 @@ class User extends ChangeNotifier {
     data.forEach(
       (id, structure) {
         if (email == structure['email'] && password == structure['password']) {
+          if (structure['type'] == 'student') {
+            numberofStudents++;
+          }
           this.id = id;
           this.Email = structure['email'];
           this.Name = structure['name'];
@@ -256,7 +258,7 @@ class User extends ChangeNotifier {
       var data = json.decode(response.body) as Map<dynamic, dynamic>;
       return data;
     } catch (e) {
-      print(12342);
+      print("object");
     }
   }
 

@@ -376,12 +376,15 @@ class _EditCoursesState extends State<EditCourses> {
         backgroundColor: const Color.fromRGBO(124, 131, 253, 1),
         selectedItemColor: Colors.amber,
         currentIndex: 1,
-        onTap: (val) {
+        onTap: (val) async {
           if (val == 0) {
+            Map data = await user.getAllCourses() ?? {};
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const Profile(),
+                builder: (context) => Profile(
+                  courseSize: data.length,
+                ),
               ),
             );
           }

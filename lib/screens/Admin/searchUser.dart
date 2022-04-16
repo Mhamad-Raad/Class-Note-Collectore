@@ -38,12 +38,12 @@ class _SearchState extends State<Search> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        leading: const Center(
-          child: Text(
-            "QIU",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            FontAwesomeIcons.angleLeft,
           ),
         ),
         automaticallyImplyLeading: false,
@@ -195,62 +195,6 @@ class _SearchState extends State<Search> {
         child: const Icon(
           Icons.add,
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color.fromRGBO(124, 131, 253, 1),
-        selectedItemColor: Colors.amber,
-        currentIndex: 2,
-        onTap: (val) async {
-          if (val == 0) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Profile(),
-              ),
-            );
-          }
-          if (val == 1) {
-            Map data = await user.getAllCourses() ?? {};
-            List<Map> courses = [];
-
-            data.forEach(
-              (key, value) {
-                courses.add(
-                  {
-                    'name': value['name'],
-                    'credits': value['credits'],
-                    'id': key,
-                  },
-                );
-              },
-            );
-
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EditCourses(
-                  courses: courses,
-                ),
-              ),
-            );
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(
-              FontAwesomeIcons.graduationCap,
-            ),
-            label: "Profile",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.timeline),
-            label: "Course",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            label: "Groups",
-          )
-        ],
       ),
     );
   }
