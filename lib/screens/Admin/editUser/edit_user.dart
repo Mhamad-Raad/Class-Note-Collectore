@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fyp/models/Course.dart';
 import 'package:provider/provider.dart';
 
-import '../../Providers/User.dart';
+import '../../../Providers/User.dart';
 
 class EditUser extends StatefulWidget {
   var data;
@@ -196,42 +196,150 @@ class _EditUserState extends State<EditUser> {
                                     Object? chosen = "Courses";
                                     var te = await user.getAllCourses();
                                     setState(() {
-                                      data = te;
-                                    });
-
-                                    bool Have = false;
-                                    if (data.isNotEmpty) {
-                                      data.forEach((key, value) {
-                                        Have = false;
-                                        String temp = value['name'];
-                                        for (int index = 0;
-                                            index < widget.courses.length;
-                                            index++) {
-                                          if (temp ==
-                                              widget.courses[index].Name) {
-                                            Have = true;
-                                          }
-                                        }
-                                        if (!Have) {
-                                          setState(() {
-                                            dataname.add({
-                                              'id': key,
-                                              'name': value["name"],
-                                              'credits': value['credits'],
-                                              'progress': value['progress'],
-                                              'mark': value['mark'],
-                                              'weeks': value['weeks'],
-                                              'chosen': false
-                                            });
+                                      try {
+                                        bool Have = false;
+                                        data = te;
+                                        if (data.isNotEmpty) {
+                                          data.forEach((key, value) {
+                                            Have = false;
+                                            String temp = value['name'];
+                                            for (int index = 0;
+                                                index < widget.courses.length;
+                                                index++) {
+                                              if (temp ==
+                                                  widget.courses[index].Name) {
+                                                Have = true;
+                                              }
+                                            }
+                                            if (!Have) {
+                                              dataname.add({
+                                                'id': key,
+                                                'name': value["name"],
+                                                'credits': value['credits'],
+                                                'progress': value['progress'],
+                                                'mark': value['mark'],
+                                                'weeks': value['weeks'],
+                                                'chosen': false
+                                              });
+                                            }
                                           });
                                         }
-                                      });
-                                      setState(() {
                                         addLoading = false;
-                                      });
-                                      print(dataname);
-
-                                      if (dataname.isEmpty) {
+                                        if (dataname.isNotEmpty) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return StatefulBuilder(
+                                                builder: (context, setState) {
+                                                  return AlertDialog(
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: const Text(
+                                                          "Cancel",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.red),
+                                                        ),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () async {
+                                                          for (int i = 0;
+                                                              i <
+                                                                  dataname
+                                                                      .length;
+                                                              i++) {
+                                                            if (dataname[i][
+                                                                    'chosen'] ==
+                                                                true) {
+                                                              await user
+                                                                  .addCourseToUser(
+                                                                      widget
+                                                                          .userid,
+                                                                      dataname[
+                                                                          i]);
+                                                              super
+                                                                  .setState(() {
+                                                                widget.courses.add(Course(
+                                                                    Name: dataname[
+                                                                            i][
+                                                                        'name'],
+                                                                    Credit: dataname[
+                                                                            i][
+                                                                        'credits'],
+                                                                    Mark: dataname[
+                                                                            i][
+                                                                        'mark'],
+                                                                    id: dataname[
+                                                                            i][
+                                                                        'id']));
+                                                              });
+                                                            }
+                                                          }
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: const Text(
+                                                          "Confirm",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.green),
+                                                        ),
+                                                      )
+                                                    ],
+                                                    title: const Text(
+                                                      "Courses",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
+                                                    content: SizedBox(
+                                                      width: 100,
+                                                      height: 100,
+                                                      child: ListView.builder(
+                                                        itemCount:
+                                                            dataname.length,
+                                                        itemBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                index) {
+                                                          return ListTile(
+                                                            leading: Text(
+                                                              dataname[index]
+                                                                  ['name'],
+                                                            ),
+                                                            trailing: Checkbox(
+                                                              onChanged: (bool?
+                                                                  value) {
+                                                                setState(() {
+                                                                  dataname[
+                                                                          index]
+                                                                      [
+                                                                      'chosen'] = !dataname[
+                                                                          index]
+                                                                      [
+                                                                      'chosen'];
+                                                                });
+                                                              },
+                                                              value: dataname[
+                                                                      index]
+                                                                  ['chosen'],
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          );
+                                        } else {
+                                          addLoading = false;
+                                        }
+                                      } catch (e) {
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
@@ -249,108 +357,18 @@ class _EditUserState extends State<EditUser> {
                                                 height: 100,
                                                 width: 100,
                                                 child: Text(
-                                                    'The user already has all the courses'),
+                                                    'The user already has all the courses or something went wrong'),
                                               ),
                                             );
                                           },
                                         );
+
+                                        setState(() {
+                                          addLoading = false;
+                                        });
+                                        print(e);
                                       }
-                                    }
-                                    if (dataname.isNotEmpty) {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return StatefulBuilder(
-                                            builder: (context, setState) {
-                                              return AlertDialog(
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: const Text(
-                                                      "Cancel",
-                                                      style: TextStyle(
-                                                          color: Colors.red),
-                                                    ),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () async {
-                                                      for (int i = 0;
-                                                          i < dataname.length;
-                                                          i++) {
-                                                        if (dataname[i]
-                                                                ['chosen'] ==
-                                                            true) {
-                                                          await user
-                                                              .addCourseToUser(
-                                                                  widget.userid,
-                                                                  dataname[i]);
-                                                          super.setState(() {
-                                                            widget.courses.add(Course(
-                                                                Name: dataname[
-                                                                    i]['name'],
-                                                                Credit: dataname[
-                                                                        i]
-                                                                    ['credits'],
-                                                                Mark: dataname[
-                                                                    i]['mark'],
-                                                                id: dataname[i]
-                                                                    ['id']));
-                                                          });
-                                                        }
-                                                      }
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: const Text(
-                                                      "Confirm",
-                                                      style: TextStyle(
-                                                          color: Colors.green),
-                                                    ),
-                                                  )
-                                                ],
-                                                title: const Text(
-                                                  "Courses",
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                                content: SizedBox(
-                                                  width: 100,
-                                                  height: 100,
-                                                  child: ListView.builder(
-                                                    itemCount: dataname.length,
-                                                    itemBuilder:
-                                                        (BuildContext context,
-                                                            index) {
-                                                      return ListTile(
-                                                        leading: Text(
-                                                          dataname[index]
-                                                              ['name'],
-                                                        ),
-                                                        trailing: Checkbox(
-                                                          onChanged:
-                                                              (bool? value) {
-                                                            setState(() {
-                                                              dataname[index][
-                                                                      'chosen'] =
-                                                                  !dataname[
-                                                                          index]
-                                                                      [
-                                                                      'chosen'];
-                                                            });
-                                                          },
-                                                          value: dataname[index]
-                                                              ['chosen'],
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        },
-                                      );
-                                    }
+                                    });
                                   },
                                   child: Row(
                                     mainAxisAlignment:

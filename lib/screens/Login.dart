@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fyp/Providers/User.dart';
-import 'package:fyp/screens/Admin/editCourses.dart';
-import 'package:fyp/screens/Student/profile.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
-import 'Admin/searchUser.dart';
+import 'Admin/Profile.dart';
+// import 'Admin/editUser/searchUser.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -172,23 +172,26 @@ class _LoginState extends State<Login> {
                                       .then((value) => {
                                             found = value,
                                           });
-                                  setState(() {
-                                    isLoading = false;
-                                  });
 
                                   if (found) {
                                     await user.getCourses();
+                                    await user.getAllCourses();
+                                    print(user.allCourses);
+
+                                    setState(() {
+                                      isLoading = false;
+                                    });
 
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => const Search(),
+                                        builder: (context) => Profile(),
                                       ),
                                     );
-                                    setState(() {
-                                      isLoading = true;
-                                    });
                                   } else {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
                                     showDialog(
                                       builder: (BuildContext context) {
                                         return AlertDialog(

@@ -5,11 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../Providers/User.dart';
-import 'editCourses.dart';
-import 'editUser/searchUser.dart';
+import 'Search.dart';
 
 class Profile extends StatefulWidget {
-  Profile({Key? key}) : super(key: key);
+  const Profile({Key? key}) : super(key: key);
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -170,17 +169,7 @@ class _ProfileState extends State<Profile> {
         backgroundColor: const Color.fromRGBO(124, 131, 253, 1),
         selectedItemColor: Colors.amber,
         currentIndex: 0,
-        onTap: (val) async {
-          if (val == 1) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EditCourses(),
-              ),
-            );
-          }
-          if (val == 2) {}
-        },
+        onTap: (val) async {},
         items: const [
           BottomNavigationBarItem(
             icon: Icon(

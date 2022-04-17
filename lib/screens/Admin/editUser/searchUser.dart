@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fyp/screens/Admin/Admin_Add_User.dart';
+import 'package:fyp/screens/Admin/editUser/Admin_Add_User.dart';
 import 'package:fyp/screens/Admin/Profile.dart';
-import 'package:fyp/screens/Admin/edit_user.dart';
+import 'package:fyp/screens/Admin/editUser/edit_user.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
-import '../../Providers/User.dart';
-import '../../models/Course.dart';
-import 'editCourses.dart';
+import '../../../Providers/User.dart';
+import '../../../models/Course.dart';
+import '../editCourses.dart';
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);
@@ -143,24 +143,29 @@ class _SearchState extends State<Search> {
                                 List courses = [];
                                 // users should be changed to user.suggestions[index][type] later;
                                 final url =
-                                    'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/${user.suggestions[index]['id']}.json';
+                                    'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/${user.type}/${user.suggestions[index]['id']}.json';
+
                                 final response = await http.get(Uri.parse(url));
 
                                 var data = json.decode(response.body)
                                     as Map<dynamic, dynamic>;
+                                try {
+                                  var coursesdata =
+                                      data['courses'] as Map<dynamic, dynamic>;
+                                  coursesdata.forEach((key, value) {
+                                    var course = Course(
+                                      Credit: value['credits'],
+                                      Name: value['name'],
+                                      id: key,
+                                      Mark: value['mark'],
+                                    );
 
-                                var coursesdata =
-                                    data['courses'] as Map<dynamic, dynamic>;
-                                coursesdata.forEach((key, value) {
-                                  var course = Course(
-                                    Credit: value['credits'],
-                                    Name: value['name'],
-                                    id: key,
-                                    Mark: value['mark'],
-                                  );
+                                    courses.add(course);
+                                  });
+                                } catch (e) {
+                                  print(e);
+                                }
 
-                                  courses.add(course);
-                                });
                                 print(data);
                                 Navigator.push(
                                   context,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fyp/screens/Admin/searchUser.dart';
+import 'package:fyp/screens/Admin/editUser/searchUser.dart';
 import 'Profile.dart';
 import 'dart:math';
 
@@ -9,9 +9,7 @@ import 'package:provider/provider.dart';
 import '../../Providers/User.dart';
 
 class EditCourses extends StatefulWidget {
-  List<Map> courses;
-
-  EditCourses({Key? key, required this.courses}) : super(key: key);
+  const EditCourses({Key? key}) : super(key: key);
 
   @override
   State<EditCourses> createState() => _EditCoursesState();
@@ -121,7 +119,7 @@ class _EditCoursesState extends State<EditCourses> {
                                     };
                                     await user.addAcourse(course);
                                     setState(() {
-                                      widget.courses.add(course);
+                                      user.allCourses.add(course);
                                     });
                                     Navigator.pop(context);
                                   },
@@ -251,7 +249,7 @@ class _EditCoursesState extends State<EditCourses> {
                     ),
                   ),
                   child: ListView.builder(
-                    itemCount: widget.courses.length,
+                    itemCount: user.allCourses.length,
                     itemBuilder: (BuildContext context, int index) {
                       return SingleChildScrollView(
                         child: Column(
@@ -278,16 +276,16 @@ class _EditCoursesState extends State<EditCourses> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    widget.courses[index]['name'],
+                                    user.allCourses[index]['name'],
                                   ),
                                   delete
                                       ? IconButton(
                                           onPressed: () async {
                                             await user.deleteAcourse(
-                                              widget.courses[index]['id'],
+                                              user.allCourses[index]['id'],
                                             );
                                             setState(() {
-                                              widget.courses.removeAt(index);
+                                              user.allCourses.removeAt(index);
                                             });
                                           },
                                           icon: const Icon(
@@ -337,7 +335,7 @@ class _EditCoursesState extends State<EditCourses> {
                                               const Text(
                                                 "Credits: ",
                                               ),
-                                              Text(widget.courses[index]
+                                              Text(user.allCourses[index]
                                                       ['credits']
                                                   .toString())
                                             ],
@@ -352,7 +350,7 @@ class _EditCoursesState extends State<EditCourses> {
                                               const Text(
                                                 "ID: ",
                                               ),
-                                              Text(widget.courses[index]['id']
+                                              Text(user.allCourses[index]['id']
                                                   .toString())
                                             ],
                                           ),
@@ -376,15 +374,12 @@ class _EditCoursesState extends State<EditCourses> {
         backgroundColor: const Color.fromRGBO(124, 131, 253, 1),
         selectedItemColor: Colors.amber,
         currentIndex: 1,
-        onTap: (val) async {
+        onTap: (val) {
           if (val == 0) {
-            Map data = await user.getAllCourses() ?? {};
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => Profile(
-                  courseSize: data.length,
-                ),
+                builder: (context) => Profile(),
               ),
             );
           }
