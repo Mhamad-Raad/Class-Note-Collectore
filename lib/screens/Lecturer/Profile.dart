@@ -7,20 +7,21 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../Providers/User.dart';
 import 'Search.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
+class LProfile extends StatefulWidget {
+  const LProfile({Key? key}) : super(key: key);
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<LProfile> createState() => _ProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileState extends State<LProfile> {
   Admin a = Admin(
       Name: 'Name', Email: 'Email', Password: 'Password', Id: 0, Type: 'Type');
   @override
   Widget build(BuildContext context) {
     final Media = MediaQuery.of(context);
     final user = Provider.of<User>(context);
+
     return Scaffold(
       backgroundColor: const Color.fromRGBO(224, 231, 244, 1),
       appBar: AppBar(

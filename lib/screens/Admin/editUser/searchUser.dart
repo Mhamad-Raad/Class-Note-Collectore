@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fyp/screens/Admin/editUser/Admin_Add_User.dart';
-import 'package:fyp/screens/Admin/Profile.dart';
 import 'package:fyp/screens/Admin/editUser/edit_user.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -40,9 +39,10 @@ class _SearchState extends State<Search> {
         ),
         leading: IconButton(
           onPressed: () {
+            FocusScope.of(context).unfocus();
             Navigator.pop(context);
           },
-          icon: Icon(
+          icon: const Icon(
             FontAwesomeIcons.angleLeft,
           ),
         ),
@@ -142,8 +142,9 @@ class _SearchState extends State<Search> {
                               onTap: () async {
                                 List courses = [];
                                 // users should be changed to user.suggestions[index][type] later;
+
                                 final url =
-                                    'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/${user.type}/${user.suggestions[index]['id']}.json';
+                                    'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/${user.suggestions[index]['type']}/${user.suggestions[index]['id']}.json';
 
                                 final response = await http.get(Uri.parse(url));
 
@@ -166,13 +167,13 @@ class _SearchState extends State<Search> {
                                   print(e);
                                 }
 
-                                print(data);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => EditUser(
                                       data: data,
                                       courses: courses,
+                                      userType: user.suggestions[index]['type'],
                                       userid: user.suggestions[index]['id'],
                                     ),
                                   ),

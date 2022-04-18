@@ -9,11 +9,13 @@ class EditUser extends StatefulWidget {
   var data;
   List courses;
   var userid;
+  var userType;
   EditUser({
     Key? key,
     required this.data,
     required this.courses,
     required this.userid,
+    required this.userType,
   }) : super(key: key);
 
   @override
@@ -69,31 +71,57 @@ class _EditUserState extends State<EditUser> {
             ),
             child: IconButton(
               onPressed: () async {
-                await user.updateUsernameAndCgpaAndPassword(
-                    name: nameController.text,
-                    passowrd: passwordController.text,
-                    cgpa: cgpaController.text,
-                    userid: widget.userid);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    onVisible: () {
-                      setState(() {
-                        loading = false;
-                      });
-                    },
-                    content: const Text('Upated'),
-                    duration: const Duration(seconds: 1),
-                    action: SnackBarAction(
-                      label: 'ok',
-                      onPressed: () {
+                try {
+                  await user.updateUsernameAndCgpaAndPassword(
+                      type: widget.userType,
+                      name: nameController.text,
+                      passowrd: passwordController.text,
+                      cgpa: cgpaController.text,
+                      userid: widget.userid);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      onVisible: () {
                         setState(() {
                           loading = false;
                         });
-                        ScaffoldMessenger.of(context).clearSnackBars();
                       },
+                      content: const Text('Upated'),
+                      duration: const Duration(seconds: 1),
+                      action: SnackBarAction(
+                        label: 'ok',
+                        onPressed: () {
+                          setState(() {
+                            loading = false;
+                          });
+                          ScaffoldMessenger.of(context).clearSnackBars();
+                        },
+                      ),
                     ),
-                  ),
-                );
+                  );
+                } catch (e) {
+                  print(e);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      onVisible: () {
+                        setState(() {
+                          loading = false;
+                        });
+                      },
+                      content: const Text(
+                          'Something went wrong please try again later'),
+                      duration: const Duration(seconds: 1),
+                      action: SnackBarAction(
+                        label: 'ok',
+                        onPressed: () {
+                          setState(() {
+                            loading = false;
+                          });
+                          ScaffoldMessenger.of(context).clearSnackBars();
+                        },
+                      ),
+                    ),
+                  );
+                }
               },
               icon: const Icon(
                 FontAwesomeIcons.floppyDisk,
@@ -162,19 +190,21 @@ class _EditUserState extends State<EditUser> {
                     const SizedBox(
                       height: 10,
                     ),
-                    TextField(
-                      keyboardType: TextInputType.number,
-                      controller: cgpaController,
-                      decoration: InputDecoration(
-                        label: const Text("CGPA"),
-                        border: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Color.fromRGBO(124, 131, 254, 1),
+                    widget.userType == 'Lecturer'
+                        ? Container()
+                        : TextField(
+                            keyboardType: TextInputType.number,
+                            controller: cgpaController,
+                            decoration: InputDecoration(
+                              label: const Text("CGPA"),
+                              border: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: Color.fromRGBO(124, 131, 254, 1),
+                                ),
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                            ),
                           ),
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                      ),
-                    ),
                     const SizedBox(
                       height: 30,
                     ),
@@ -338,6 +368,30 @@ class _EditUserState extends State<EditUser> {
                                           );
                                         } else {
                                           addLoading = false;
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child:
+                                                        const Text("Confirm"),
+                                                  )
+                                                ],
+                                                title:
+                                                    const Text('Not available'),
+                                                content: const SizedBox(
+                                                  height: 100,
+                                                  width: 100,
+                                                  child: Text(
+                                                      'The user already has all the courses'),
+                                                ),
+                                              );
+                                            },
+                                          );
                                         }
                                       } catch (e) {
                                         showDialog(
@@ -357,7 +411,7 @@ class _EditUserState extends State<EditUser> {
                                                 height: 100,
                                                 width: 100,
                                                 child: Text(
-                                                    'The user already has all the courses or something went wrong'),
+                                                    'something went wrong'),
                                               ),
                                             );
                                           },

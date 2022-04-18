@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fyp/Providers/User.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
-import 'Admin/Profile.dart';
-// import 'Admin/editUser/searchUser.dart';
+import '.././screens/Student/profile.dart';
+import '.././screens/Admin/editCourses.dart';
+import '.././screens/Lecturer/Profile.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -176,18 +176,34 @@ class _LoginState extends State<Login> {
                                   if (found) {
                                     await user.getCourses();
                                     await user.getAllCourses();
-                                    print(user.allCourses);
 
                                     setState(() {
                                       isLoading = false;
                                     });
-
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Profile(),
-                                      ),
-                                    );
+                                    if (user.type == 'Admin') {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const EditCourses(),
+                                        ),
+                                      );
+                                    } else if (user.type == 'Student') {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Profile(),
+                                        ),
+                                      );
+                                    }
+                                     else if (user.type == 'Lecturer') {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => const LProfile(),
+                                        ),
+                                      );
+                                    }
                                   } else {
                                     setState(() {
                                       isLoading = false;

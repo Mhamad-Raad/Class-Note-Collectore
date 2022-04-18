@@ -60,7 +60,6 @@ class User extends ChangeNotifier {
         'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/${this.type}/${this.id}/courses.json';
 
     final response = await http.get(Uri.parse(url));
-    print(response.body + 111.toString());
 
     try {
       var data = json.decode(response.body) as Map<String, dynamic>;
@@ -72,7 +71,7 @@ class User extends ChangeNotifier {
         course.Name = await structure['name'];
         course.Credit = structure['credits'];
         course.Mark = structure['mark'];
-        course.progress = structure['progress'] + 0.0;
+        course.progress = structure['progress'] + 1.0 - 1.0;
         course.weeks = structure['weeks'];
         try {
           var assignments = structure['assignments'] as Map<String, dynamic>;
@@ -316,15 +315,27 @@ class User extends ChangeNotifier {
   }
 
   Future updateUsernameAndCgpaAndPassword(
-      {name, passowrd, cgpa, userid}) async {
+      {name, passowrd, cgpa, userid, type}) async {
     print(userid);
     final url =
-        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/$userid.json';
-    await http.patch(
-      Uri.parse(url),
-      body: json.encode(
-        {'name': name, 'password': passowrd, 'cgpa': cgpa},
-      ),
-    );
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/$type/$userid.json';
+    if (type == 'Lecturer') {
+      await http.patch(
+        Uri.parse(url),
+        body: json.encode(
+          {
+            'name': name,
+            'password': passowrd,
+          },
+        ),
+      );
+    } else {
+      await http.patch(
+        Uri.parse(url),
+        body: json.encode(
+          {'name': name, 'password': passowrd, 'cgpa': cgpa},
+        ),
+      );
+    }
   }
 }
