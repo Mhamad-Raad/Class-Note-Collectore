@@ -539,4 +539,17 @@ class User extends ChangeNotifier {
       );
     }
   }
+
+  UpdateGrade(cID, uID, aMark) async {
+    final url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student/$uID/courses/$cID.json';
+    await http.patch(
+      Uri.parse(url),
+      body: json.encode(
+        {
+          'mark': aMark,
+        },
+      ),
+    );
+  }
 }

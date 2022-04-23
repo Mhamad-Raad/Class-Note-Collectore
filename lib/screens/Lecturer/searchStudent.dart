@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:fyp/screens/Admin/editUser/edit_user.dart';
+import 'GradeStudentProfile.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -139,41 +139,39 @@ class _SearchSState extends State<SearchS> {
                                 user.suggestions[index]['type'],
                               ),
                               onTap: () async {
-                                List courses = [];
                                 // users should be changed to user.suggestions[index][type] later;
 
                                 final url =
-                                    'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/${user.suggestions[index]['type']}/${user.suggestions[index]['id']}.json';
+                                    'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student/${user.suggestions[index]['id']}.json';
 
-                                final response = await http.get(Uri.parse(url));
+                                final response = await http.get(
+                                  Uri.parse(url),
+                                );
+                                var wantedCourse;
 
                                 var data = json.decode(response.body)
                                     as Map<dynamic, dynamic>;
-                                try {
-                                  var coursesdata =
-                                      data['courses'] as Map<dynamic, dynamic>;
-                                  coursesdata.forEach((key, value) {
-                                    var course = Course(
-                                      Credit: value['credits'],
-                                      Name: value['name'],
-                                      id: key,
-                                      Mark: value['mark'],
-                                    );
-
-                                    courses.add(course);
+                                print(data);
+                                var cd = data['courses'];
+                                cd.forEach((id, value) {
+                                  user.courses.forEach((element) {
+                                    if (id == element.id) {
+                                      wantedCourse = {
+                                        'owner': user.suggestions[index]['id'],
+                                        'id': id,
+                                        'mark': value['mark'],
+                                        'name': value['name'],
+                                      };
+                                    }
                                   });
-                                } catch (e) {
-                                  print(e);
-                                }
+                                });
 
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => EditUser(
                                       data: data,
-                                      courses: courses,
-                                      userType: user.suggestions[index]['type'],
-                                      userid: user.suggestions[index]['id'],
+                                      wantedCourse: wantedCourse,
                                     ),
                                   ),
                                 );
