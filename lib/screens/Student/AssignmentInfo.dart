@@ -129,8 +129,9 @@ class _AssignmentInfoState extends State<AssignmentInfo> {
                   onChanged: (bool? newValue) {
                     setState(() {
                       user.updateAssignmentStatus(
-                          assignmentIndex: widget.asgi,
-                          courseIndex: widget.coursei,
+                          assignmentIndex: user.courses[widget.coursei]
+                              .assignments[widget.asgi].Id,
+                          courseIndex: user.courses[widget.coursei].id,
                           newStatus: newValue ?? false);
                       user.notifystatus(widget.coursei, widget.asgi, newValue);
 

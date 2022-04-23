@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp/models/Admin.dart';
 import 'package:fyp/screens/Lecturer/Courses.dart';
 import 'package:fyp/screens/Lecturer/searchStudent.dart';
+import 'package:fyp/screens/Login.dart';
 
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -46,11 +47,19 @@ class _ProfileState extends State<LProfile> {
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 10),
-            child: const IconButton(
-              onPressed: null,
-              icon: Icon(
-                FontAwesomeIcons.graduationCap,
-                color: Colors.black,
+            child: IconButton(
+              onPressed: () {
+                user.logout();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Login(),
+                  ),
+                );
+              },
+              icon: const Icon(
+                FontAwesomeIcons.arrowRightFromBracket,
+                color: Color.fromARGB(255, 194, 58, 58),
               ),
             ),
           ),

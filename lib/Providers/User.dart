@@ -24,6 +24,19 @@ class User extends ChangeNotifier {
     required this.type,
   });
 
+  logout() {
+    Name = '';
+    Email = '';
+    id = '';
+    type = '';
+    numberofCourses = 0;
+    numberofStudents = 0;
+    cgpa = 0;
+    credits = 0;
+    allCourses = [];
+    courses = [];
+  }
+
   Future<bool> Login(email, password) async {
     bool found = false;
 
@@ -81,7 +94,7 @@ class User extends ChangeNotifier {
     var data = json.decode(response.body) as Map<String, dynamic>;
 
     data.forEach((id, structure) async {
-      Course course = Course(Name: "Name", Credit: 0, Mark: 0, id: "0");
+      Course course = Course(Name: "Name", Credit: 0, Mark: 0.0, id: "0");
       course.id = id;
 
       course.Name = await structure['name'];
@@ -289,9 +302,10 @@ class User extends ChangeNotifier {
         total += percentage;
       }
     }
+    print(total);
 
     final url =
-        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student/$id/courses/$courseIndex.json';
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student/$id/courses/${courses[courseIndex].id}.json';
 
     await http.patch(
       Uri.parse(url),

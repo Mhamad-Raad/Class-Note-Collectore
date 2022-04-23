@@ -5,7 +5,7 @@ class Course {
 
   String Name;
   int Credit;
-  int Mark;
+  double Mark;
   String id;
   double progress = 0;
   var weeks = 0;

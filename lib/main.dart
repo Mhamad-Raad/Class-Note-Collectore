@@ -27,7 +27,7 @@ class _MyAPPState extends State<MyAPP> {
     return MultiProvider(
       providers: [
         Provider<User>(
-          create: (_) => User(Name: "", id: "0", type: "", Email: ""),
+          create: (_) => User(Name: "", id: '', type: "", Email: ""),
         ),
       ],
       child: MaterialApp(
