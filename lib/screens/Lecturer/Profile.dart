@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/models/Admin.dart';
+import 'package:fyp/screens/Lecturer/Courses.dart';
 
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -170,7 +171,16 @@ class _ProfileState extends State<LProfile> {
         backgroundColor: const Color.fromRGBO(124, 131, 253, 1),
         selectedItemColor: Colors.amber,
         currentIndex: 0,
-        onTap: (val) async {},
+        onTap: (val) async {
+          if (val == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CoursesDetails(),
+              ),
+            );
+          }
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(

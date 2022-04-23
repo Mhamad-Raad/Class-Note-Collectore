@@ -141,11 +141,6 @@ class _LoginState extends State<Login> {
                           height: mediaQuery.size.height * .1 * .5,
                         ),
                         SizedBox(
-                          width: mediaQuery.size.width * .4,
-                          height: mediaQuery.size.height * .2 * .5,
-                          child: dropDown(),
-                        ),
-                        SizedBox(
                           height: mediaQuery.size.height * .1 * .5,
                         ),
                         isLoading
@@ -168,7 +163,7 @@ class _LoginState extends State<Login> {
 
                                   bool found = false;
                                   await user.Login(emlController.text,
-                                          pssController.text, user.type)
+                                          pssController.text)
                                       .then((value) => {
                                             found = value,
                                           });
@@ -195,12 +190,12 @@ class _LoginState extends State<Login> {
                                           builder: (context) => Profile(),
                                         ),
                                       );
-                                    }
-                                     else if (user.type == 'Lecturer') {
+                                    } else if (user.type == 'Lecturer') {
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => const LProfile(),
+                                          builder: (context) =>
+                                              const LProfile(),
                                         ),
                                       );
                                     }
@@ -274,43 +269,5 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
-  }
-}
-
-class dropDown extends StatefulWidget {
-  dropDown({Key? key}) : super(key: key);
-
-  @override
-  State<dropDown> createState() => _dropDownState();
-}
-
-class _dropDownState extends State<dropDown> {
-  @override
-  Widget build(BuildContext context) {
-    var chosen = "Student";
-    var user = Provider.of<User>(context);
-    return DropdownButtonFormField(
-        decoration: const InputDecoration(
-          filled: true,
-          fillColor: Colors.white,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(50.0)),
-          ),
-        ),
-        style: const TextStyle(fontSize: 16, color: Colors.black),
-        value: chosen,
-        items: <String>["Student", "Admin", "Lecturer", 'users']
-            .map<DropdownMenuItem<String>>((String v) {
-          return DropdownMenuItem<String>(
-            value: v,
-            child: Text(v),
-          );
-        }).toList(),
-        onChanged: (String? a) {
-          setState(() {
-            chosen = a ?? "";
-            user.type = a ?? "";
-          });
-        });
   }
 }

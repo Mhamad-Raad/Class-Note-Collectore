@@ -24,7 +24,7 @@ class User extends ChangeNotifier {
     required this.type,
   });
 
-  Future<bool> Login(email, password, type) async {
+  Future<bool> Login(email, password) async {
     bool found = false;
 
     var url =
@@ -33,24 +33,41 @@ class User extends ChangeNotifier {
 
     var data = json.decode(response.body) as Map<String, dynamic>;
 
-    data.forEach((type, content) {
-      var details = content as Map;
-      if (type == "Student") {
-        numberofStudents++;
-      }
-      details.forEach((id, value) {
-        if (email == value['email'] && password == value['password']) {
-          this.type = type;
-          this.Email = value['email'];
-          this.Name = value['name'];
-          this.id = id;
-          // this.cgpa = value['cgpa'] + 0.0;
-          // this.credits = value['credits'];
-
-          found = true;
+    data.forEach(
+      (type, content) {
+        var details = content as Map;
+        if (type == "Student") {
+          numberofStudents++;
         }
-      });
-    });
+        if (type == "Student") {
+          details.forEach((id, value) {
+            if (email == value['email'] && password == value['password']) {
+              this.type = type;
+              this.Email = value['email'];
+              this.Name = value['name'];
+              this.id = id;
+              this.cgpa = value['cgpa'] + 1.0 - 1.0;
+              this.credits = value['credits'];
+
+              found = true;
+            }
+          });
+        }
+
+        if (type == "Lecturer") {
+          details.forEach((id, value) {
+            if (email == value['email'] && password == value['password']) {
+              this.type = type;
+              this.Email = value['email'];
+              this.Name = value['name'];
+              this.id = id;
+
+              found = true;
+            }
+          });
+        }
+      },
+    );
 
     return found;
   }
@@ -61,42 +78,125 @@ class User extends ChangeNotifier {
 
     final response = await http.get(Uri.parse(url));
 
-    try {
-      var data = json.decode(response.body) as Map<String, dynamic>;
+    var data = json.decode(response.body) as Map<String, dynamic>;
 
-      data.forEach((id, structure) async {
-        Course course = Course(Name: "Name", Credit: 0, Mark: 0, id: "0");
-        course.id = id;
+    data.forEach((id, structure) async {
+      Course course = Course(Name: "Name", Credit: 0, Mark: 0, id: "0");
+      course.id = id;
 
-        course.Name = await structure['name'];
-        course.Credit = structure['credits'];
-        course.Mark = structure['mark'];
-        course.progress = structure['progress'] + 1.0 - 1.0;
-        course.weeks = structure['weeks'];
-        try {
-          var assignments = structure['assignments'] as Map<String, dynamic>;
-
-          assignments.forEach((id, structure) {
-            var asg = Assignment(Mark: 0, Content: 'Content', Id: "0");
-            asg.Id = id;
-            asg.Content = structure['content'];
-            asg.Mark = structure['mark'];
-            asg.title = structure['title'];
-            asg.date = structure['date'];
-            asg.status = structure['status'];
-            course.assignments.add(asg);
-          });
-        } catch (e) {
-          print(e);
-        }
-
+      course.Name = await structure['name'];
+      course.Credit = structure['credits'];
+      course.Mark = structure['mark'];
+      course.progress = structure['progress'] + 1.0 - 1.0;
+      course.weeks = structure['weeks'];
+      try {
+        var assignments = structure['assignments'] as Map<dynamic, dynamic>;
+        assignments.forEach((id, structure) {
+          var asg = Assignment(
+            Mark: 0,
+            Content: 'Content',
+            Id: 0,
+            status: false,
+            title: "Assignment",
+            date: 0,
+          );
+          asg.Id = int.parse(id);
+          asg.Content = structure['content'];
+          asg.Mark = structure['mark'];
+          asg.title = structure['title'];
+          asg.date = structure['date'] + 0;
+          asg.status = structure['status'];
+          course.assignments.add(asg);
+          courses.add(course);
+        });
+      } catch (e) {
         courses.add(course);
-      });
-    } catch (e) {
-      print(e);
-    }
+        print('no assignments for course ' + id + e.toString());
+      }
+    });
 
     notifyListeners();
+  }
+
+  addAssignmentToACourse(CourseID, asg) async {
+    const url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student.json';
+
+    final response = await http.get(Uri.parse(url));
+    var data = json.decode(response.body) as Map<String, dynamic>;
+
+    data.forEach(
+      (id, value) {
+        var studentCourses = value['courses'] as Map;
+        studentCourses.forEach(
+          (key, value) async {
+            if (key == CourseID) {
+              final myurl =
+                  'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Lecturer/${this.id}/courses/$CourseID/assignments/${asg['id']}.json';
+              await http.put(
+                Uri.parse(myurl),
+                body: json.encode(
+                  {
+                    'title': asg['title'],
+                    'content': asg['content'],
+                    'mark': asg['mark'],
+                    'date': asg['date'] as int,
+                    'status': false,
+                  },
+                ),
+              );
+
+              final uri =
+                  'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student/$id/courses/$key/assignments/${asg['id']}.json';
+
+              final last = await http.put(
+                Uri.parse(uri),
+                body: json.encode(
+                  {
+                    'title': asg['title'],
+                    'content': asg['content'],
+                    'mark': asg['mark'],
+                    'date': asg['date'] as int,
+                    'status': false,
+                  },
+                ),
+              );
+              var link =
+                  "https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student/$id/courses/$key.json";
+              await http.patch(
+                Uri.parse(link),
+                body: json.encode(
+                  {
+                    'weeks': asg['date'] as int,
+                  },
+                ),
+              );
+
+              var lastLink =
+                  "https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Lecturer/${this.id}/courses/$key.json";
+              await http.patch(
+                Uri.parse(lastLink),
+                body: json.encode(
+                  {
+                    'weeks': asg['date'] as int,
+                  },
+                ),
+              );
+            }
+          },
+        );
+      },
+    );
+  }
+
+  updateAssignmentStatus(
+      {courseIndex, assignmentIndex, required bool newStatus}) async {
+    final url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student/$id/courses/$courseIndex/assignments/$assignmentIndex.json';
+    await http.patch(
+      Uri.parse(url),
+      body: json.encode({'status': newStatus}),
+    );
   }
 
   notifystatus(courseIndex, assignmentIndex, newval) {
@@ -104,13 +204,78 @@ class User extends ChangeNotifier {
     notifyListeners();
   }
 
-  updateAssignmentStatus(
-      {courseIndex, assignmentIndex, required bool newStatus}) async {
+  updateAssignment({courseIndex, assignmentIndex, data}) async {
     final url =
-        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/$type/$id/courses/"$courseIndex"/assignments/"$assignmentIndex".json';
-    await http.patch(
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Lecturer/$id/courses/$courseIndex/assignments/$assignmentIndex.json';
+    final a = await http.patch(
       Uri.parse(url),
-      body: json.encode({'status': newStatus}),
+      body: json.encode(
+        {
+          'content': data['content'],
+          'title': data['title'],
+          'mark': data['mark'] + 0,
+        },
+      ),
+    );
+    const studenturl =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student.json';
+    final response = await http.get(
+      Uri.parse(studenturl),
+    );
+    var d = json.decode(response.body) as Map;
+
+    d.forEach(
+      (studentID, value) {
+        var studentCourse = value['courses'] as Map;
+        studentCourse.forEach(
+          (cID, value) async {
+            if (cID == courseIndex) {
+              final temp =
+                  'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student/$studentID/courses/$cID/assignments/$assignmentIndex.json';
+              var a = await http.patch(
+                Uri.parse(temp),
+                body: json.encode(
+                  {
+                    'content': data['content'],
+                    'title': data['title'],
+                    'mark': data['mark'] + 0,
+                  },
+                ),
+              );
+            }
+          },
+        );
+      },
+    );
+  }
+
+  deleteAssignment(courseID, assignmentID) async {
+    final url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Lecturer/$id/courses/$courseID/assignments/$assignmentID.json';
+    await http.delete(
+      Uri.parse(url),
+    );
+
+    const studenturl =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student.json';
+    final response = await http.get(
+      Uri.parse(studenturl),
+    );
+    var data = json.decode(response.body) as Map;
+
+    data.forEach(
+      (studentID, value) {
+        var studentCourse = value['courses'] as Map;
+        studentCourse.forEach((cID, value) async {
+          if (cID == courseID) {
+            final temp =
+                'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student/$studentID/courses/$cID/assignments/$assignmentID.json';
+            var a = await http.delete(
+              Uri.parse(temp),
+            );
+          }
+        });
+      },
     );
   }
 
@@ -126,7 +291,7 @@ class User extends ChangeNotifier {
     }
 
     final url =
-        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/$type/$id/courses/"$courseIndex".json';
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student/$id/courses/$courseIndex.json';
 
     await http.patch(
       Uri.parse(url),
