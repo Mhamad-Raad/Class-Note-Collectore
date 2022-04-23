@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../Providers/User.dart';
+import '../Login.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -43,11 +44,19 @@ class _ProfileState extends State<Profile> {
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 10),
-            child: const IconButton(
-              onPressed: null,
-              icon: Icon(
-                FontAwesomeIcons.graduationCap,
-                color: Colors.black,
+            child: IconButton(
+              onPressed: () {
+                user.logout();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Login(),
+                  ),
+                );
+              },
+              icon: const Icon(
+                FontAwesomeIcons.arrowRightFromBracket,
+                color: Color.fromARGB(255, 194, 58, 58),
               ),
             ),
           ),
