@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '.././screens/Student/profile.dart';
 import '.././screens/Admin/editCourses.dart';
 import '.././screens/Lecturer/Profile.dart';
+import 'Admin/Profile.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -169,7 +170,6 @@ class _LoginState extends State<Login> {
                                           });
 
                                   if (found) {
-                                    await user.getCourses();
                                     await user.getAllCourses();
 
                                     setState(() {
@@ -184,6 +184,7 @@ class _LoginState extends State<Login> {
                                         ),
                                       );
                                     } else if (user.type == 'Student') {
+                                      await user.getCourses();
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
@@ -191,11 +192,19 @@ class _LoginState extends State<Login> {
                                         ),
                                       );
                                     } else if (user.type == 'Lecturer') {
+                                      await user.getCourses();
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               const LProfile(),
+                                        ),
+                                      );
+                                    } else if (user.type == 'Admin') {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => AProfile(),
                                         ),
                                       );
                                     }

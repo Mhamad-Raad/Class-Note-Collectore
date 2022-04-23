@@ -49,6 +49,7 @@ class User extends ChangeNotifier {
     data.forEach(
       (type, content) {
         var details = content as Map;
+
         if (type == "Student") {
           numberofStudents++;
         }
@@ -67,7 +68,7 @@ class User extends ChangeNotifier {
           });
         }
 
-        if (type == "Lecturer") {
+        if (type == "Lecturer" || type == 'Admin') {
           details.forEach((id, value) {
             if (email == value['email'] && password == value['password']) {
               this.type = type;
@@ -99,7 +100,7 @@ class User extends ChangeNotifier {
 
       course.Name = await structure['name'];
       course.Credit = structure['credits'];
-      course.Mark = structure['mark'];
+      course.Mark = structure['mark'] + 0.0;
       course.progress = structure['progress'] + 1.0 - 1.0;
       course.weeks = structure['weeks'];
       try {

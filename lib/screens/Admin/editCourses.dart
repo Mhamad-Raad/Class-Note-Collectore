@@ -379,7 +379,7 @@ class _EditCoursesState extends State<EditCourses> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => Profile(),
+                builder: (context) => AProfile(),
               ),
             );
           }

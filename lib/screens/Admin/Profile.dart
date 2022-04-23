@@ -9,14 +9,14 @@ import '../Login.dart';
 import 'editCourses.dart';
 import 'editUser/searchUser.dart';
 
-class Profile extends StatefulWidget {
-  Profile({Key? key}) : super(key: key);
+class AProfile extends StatefulWidget {
+  AProfile({Key? key}) : super(key: key);
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<AProfile> createState() => _ProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileState extends State<AProfile> {
   Admin a = Admin(
       Name: 'Name', Email: 'Email', Password: 'Password', Id: 0, Type: 'Type');
   @override
