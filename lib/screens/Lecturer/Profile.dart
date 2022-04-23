@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/models/Admin.dart';
 import 'package:fyp/screens/Lecturer/Courses.dart';
+import 'package:fyp/screens/Lecturer/searchStudent.dart';
 
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../Providers/User.dart';
-import 'Search.dart';
 
 class LProfile extends StatefulWidget {
   const LProfile({Key? key}) : super(key: key);
@@ -135,7 +135,7 @@ class _ProfileState extends State<LProfile> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const Search(),
+                          builder: (context) => const SearchS(),
                         ),
                       );
                     },

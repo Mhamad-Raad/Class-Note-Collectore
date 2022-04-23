@@ -347,6 +347,42 @@ class User extends ChangeNotifier {
     );
   }
 
+  Future<bool> searchStudents(String wanted) async {
+    if (wanted != '' && wanted != ' ') {
+      wanted = wanted.toLowerCase();
+      const url =
+          'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student.json';
+      final response = await http.get(
+        Uri.parse(url),
+      );
+      var data = json.decode(response.body) as Map<String, dynamic>;
+      // print(data);
+      suggestions.clear();
+      data.forEach(
+        (sID, value) {
+          String temp = value['name'];
+          temp = temp.toLowerCase();
+
+          if (temp.contains(wanted)) {
+            suggestions.add(
+              {
+                'name': value['name'],
+                'id': sID,
+                'type': value['type'],
+                'credits': value['credits'],
+                'cgpa': value['cgpa']
+              },
+            );
+
+            notifyListeners();
+          }
+        },
+      );
+    }
+
+    return false;
+  }
+
   Future<bool> searchUsers(String wanted) async {
     if (wanted != '' && wanted != ' ') {
       wanted = wanted.toLowerCase();
