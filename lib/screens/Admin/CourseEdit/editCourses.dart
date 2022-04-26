@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fyp/screens/Admin/CourseEdit/CourseUpdate.dart';
 import 'package:fyp/screens/Admin/editUser/searchUser.dart';
-import 'Profile.dart';
+import '../Profile.dart';
 import 'dart:math';
 
 import 'package:provider/provider.dart';
 
-import '../../Providers/User.dart';
+import '../../../Providers/User.dart';
 
 class EditCourses extends StatefulWidget {
   const EditCourses({Key? key}) : super(key: key);
@@ -24,8 +25,8 @@ class _EditCoursesState extends State<EditCourses> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context, listen: true);
-
     final Media = MediaQuery.of(context);
+
     return Scaffold(
       backgroundColor: const Color.fromRGBO(224, 231, 244, 1),
       appBar: AppBar(
@@ -310,7 +311,7 @@ class _EditCoursesState extends State<EditCourses> {
                             ),
                             (v[index] == true)
                                 ? Container(
-                                    height: Media.size.height * .4 * .3,
+                                    height: Media.size.height * .4 * .5,
                                     width: Media.size.width * .9 * .9,
                                     decoration: const BoxDecoration(
                                       color: Colors.white,
@@ -353,6 +354,33 @@ class _EditCoursesState extends State<EditCourses> {
                                               Text(user.allCourses[index]['id']
                                                   .toString())
                                             ],
+                                          ),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      CourseInfoUpdate(
+                                                    course: {
+                                                      'name':
+                                                          user.allCourses[index]
+                                                              ['name'],
+                                                      'id':
+                                                          user.allCourses[index]
+                                                              ['id'],
+                                                      'credits':
+                                                          user.allCourses[index]
+                                                              ['credits'],
+                                                    },
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: const Text("view Course"),
                                           ),
                                         ],
                                       ),

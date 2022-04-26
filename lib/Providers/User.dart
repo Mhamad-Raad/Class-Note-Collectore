@@ -303,7 +303,7 @@ class User extends ChangeNotifier {
         total += percentage;
       }
     }
-    print(total);
+   
 
     final url =
         'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student/$id/courses/${courses[courseIndex].id}.json';
@@ -563,6 +563,20 @@ class User extends ChangeNotifier {
       body: json.encode(
         {
           'mark': aMark,
+        },
+      ),
+    );
+  }
+
+  UpdatecourseNameAndCredits(CourseID, cName, cCredits) async {
+    final url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/courses/$CourseID.json';
+    await http.patch(
+      Uri.parse(url),
+      body: json.encode(
+        {
+          'name': cName,
+          'credits': cCredits,
         },
       ),
     );

@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 import '../../../Providers/User.dart';
 import '../../../models/Course.dart';
-import '../editCourses.dart';
+import '../CourseEdit/editCourses.dart';
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);

@@ -6,7 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../Providers/User.dart';
 import '../Login.dart';
-import 'editCourses.dart';
+import 'CourseEdit/editCourses.dart';
 import 'editUser/searchUser.dart';
 
 class AProfile extends StatefulWidget {

@@ -47,71 +47,95 @@ class CourseInfo extends StatelessWidget {
       body: SizedBox(
         height: Media.size.height,
         width: Media.size.width,
-        child: ListView.builder(
-          itemCount: user.courses[index].weeks,
-          itemBuilder: (BuildContext context, int i) {
-            if (user.courses[index].assignments[i].date == i + 1) {
-              return Container(
-                margin: const EdgeInsets.only(top: 30),
-                height: 150,
-                width: double.infinity,
-                child: Column(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: Media.size.height * .1,
+                width: Media.size.width * .5,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Week ${i + 1}",
-                        textAlign: TextAlign.start,
-                      ),
+                    const Text("Mark: "),
+                    Text(
+                      user.courses[index].Mark.toString(),
                     ),
-                    Container(
-                      color: Colors.grey[300],
-                      width: Media.size.width,
-                      height: 2,
-                    ),
-                    const Text(
-                      "Assignments",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          user.courses[index].assignments[i].title,
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: const Color.fromRGBO(124, 131, 253, 1),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AssignmentInfo(
-                                  asgi: i,
-                                  coursei: index,
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            "view assignment",
-                          ),
-                        )
-                      ],
-                    )
                   ],
                 ),
-              );
-            }
-            return Container();
-          },
+              ),
+              SizedBox(
+                height: Media.size.height * .9,
+                width: Media.size.width,
+                child: ListView.builder(
+                  itemCount: user.courses[index].weeks,
+                  itemBuilder: (BuildContext context, int i) {
+                    if (user.courses[index].assignments[i].date == i + 1) {
+                      return Container(
+                        margin: const EdgeInsets.only(top: 30),
+                        height: 150,
+                        width: double.infinity,
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "Week ${i + 1}",
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                            Container(
+                              color: Colors.grey[300],
+                              width: Media.size.width,
+                              height: 2,
+                            ),
+                            const Text(
+                              "Assignments",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Text(
+                                  user.courses[index].assignments[i].title,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary:
+                                        const Color.fromRGBO(124, 131, 253, 1),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AssignmentInfo(
+                                          asgi: i,
+                                          coursei: index,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    "view assignment",
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      );
+                    }
+                    return Container();
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(

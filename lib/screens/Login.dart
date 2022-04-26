@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import '.././screens/Student/profile.dart';
-import '.././screens/Admin/editCourses.dart';
+import 'Admin/CourseEdit/editCourses.dart';
 import '.././screens/Lecturer/Profile.dart';
 import 'Admin/Profile.dart';
 
