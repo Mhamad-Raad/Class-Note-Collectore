@@ -137,7 +137,7 @@ class _SearchState extends State<Search> {
                                 user.suggestions[index]['name'],
                               ),
                               trailing: Text(
-                                user.suggestions[index]['type'],
+                                user.suggestions[index]['type'] ?? "User",
                               ),
                               onTap: () async {
                                 List courses = [];
@@ -158,7 +158,7 @@ class _SearchState extends State<Search> {
                                       Credit: value['credits'],
                                       Name: value['name'],
                                       id: key,
-                                      Mark: value['mark'],
+                                      Mark: value['mark'] + 0.0,
                                     );
 
                                     courses.add(course);

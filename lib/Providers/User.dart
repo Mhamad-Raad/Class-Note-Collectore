@@ -35,6 +35,7 @@ class User extends ChangeNotifier {
     credits = 0;
     allCourses = [];
     courses = [];
+    suggestions = [];
   }
 
   Future<bool> Login(email, password) async {
@@ -60,7 +61,7 @@ class User extends ChangeNotifier {
               this.Email = value['email'];
               this.Name = value['name'];
               this.id = id;
-              this.cgpa = value['cgpa'] + 1.0 - 1.0;
+              this.cgpa = double.parse(value['cgpa']) + 1.0 - 1.0;
               this.credits = value['credits'];
 
               found = true;
@@ -87,6 +88,7 @@ class User extends ChangeNotifier {
   }
 
   Future<void> getCourses() async {
+    courses = [];
     final url =
         'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/${this.type}/${this.id}/courses.json';
 
@@ -96,13 +98,17 @@ class User extends ChangeNotifier {
 
     data.forEach((id, structure) async {
       Course course = Course(Name: "Name", Credit: 0, Mark: 0.0, id: "0");
-      course.id = id;
 
-      course.Name = await structure['name'];
+      course.id = id;
+      this.courses.add(course);
+      course.Name = structure['name'];
+
       course.Credit = structure['credits'];
-      course.Mark = structure['mark'] + 0.0;
-      course.progress = structure['progress'] + 1.0 - 1.0;
+      course.Mark = double.parse(structure['mark'].toString()) + 0.0;
+      course.progress =
+          double.parse(structure['progress'].toString()) + 1.0 - 1.0;
       course.weeks = structure['weeks'];
+
       try {
         var assignments = structure['assignments'] as Map<dynamic, dynamic>;
         assignments.forEach((id, structure) {
@@ -121,10 +127,10 @@ class User extends ChangeNotifier {
           asg.date = structure['date'] + 0;
           asg.status = structure['status'];
           course.assignments.add(asg);
-          courses.add(course);
+          courses[courses.length - 1].assignments.add(asg);
         });
       } catch (e) {
-        courses.add(course);
+        courses[courses.length - 1].assignments = [];
         print('no assignments for course ' + id + e.toString());
       }
     });
@@ -303,7 +309,6 @@ class User extends ChangeNotifier {
         total += percentage;
       }
     }
-   
 
     final url =
         'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student/$id/courses/${courses[courseIndex].id}.json';
@@ -412,23 +417,26 @@ class User extends ChangeNotifier {
       data.forEach(
         (type, value) {
           var body = value as Map<dynamic, dynamic>;
+
           body.forEach(
             (key, value) {
-              String temp = value['name'];
-              temp = temp.toLowerCase();
+              if (value['type'] != "Admin") {
+                String temp = value['name'].toString();
+                temp = temp.toLowerCase();
 
-              if (temp.contains(wanted)) {
-                suggestions.add(
-                  {
-                    'name': value['name'],
-                    'id': key,
-                    'type': value['type'],
-                    'credits': value['credits'],
-                    'cgpa': value['cgpa']
-                  },
-                );
+                if (temp.contains(wanted)) {
+                  suggestions.add(
+                    {
+                      'name': value['name'],
+                      'id': key,
+                      'type': value['type'],
+                      'credits': value['credits'],
+                      'cgpa': value['cgpa']
+                    },
+                  );
 
-                notifyListeners();
+                  notifyListeners();
+                }
               }
             },
           );
@@ -440,10 +448,10 @@ class User extends ChangeNotifier {
   }
 
 // users should be changed to value['type'] which you send via parameter later;
-  Future<void> deleteuserCourse(courseId, courseIndex, userid) async {
+  Future<void> deleteuserCourse(usert, courseId, courseIndex, userid) async {
     notifyListeners();
     final url =
-        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/$userid/courses/$courseId.json';
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/$usert/$userid/courses/$courseId.json';
 
     await http.delete(
       Uri.parse(url),
@@ -514,9 +522,9 @@ class User extends ChangeNotifier {
     }
   }
 
-  Future addCourseToUser(userid, course) async {
+  Future addCourseToUser(userid, course, utype) async {
     final url =
-        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/$type/$userid/courses/${course['id']}.json';
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student/$userid/courses/${course['id']}.json';
 
     await http.put(
       Uri.parse(url),

@@ -185,6 +185,14 @@ class _LoginState extends State<Login> {
                                       );
                                     } else if (user.type == 'Student') {
                                       await user.getCourses();
+                                      // for (int i = 0;
+                                      //     i < user.courses.length;
+                                      //     i++) {
+                                      //   print(user.courses[i].Name);
+                                      //   print(user.courses[i].id);
+
+                                      //   print(user.courses.length);
+                                      // }
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(

@@ -287,25 +287,32 @@ class _EditUserState extends State<EditUser> {
                                                                 true) {
                                                               await user
                                                                   .addCourseToUser(
-                                                                      widget
-                                                                          .userid,
-                                                                      dataname[
-                                                                          i]);
+                                                                widget.userid
+                                                                    .toString(),
+                                                                dataname[i],
+                                                                widget.userType,
+                                                              );
                                                               super
                                                                   .setState(() {
-                                                                widget.courses.add(Course(
+                                                                widget.courses
+                                                                    .add(
+                                                                  Course(
                                                                     Name: dataname[
                                                                             i][
                                                                         'name'],
-                                                                    Credit: dataname[
-                                                                            i][
-                                                                        'credits'],
-                                                                    Mark: dataname[
-                                                                            i][
-                                                                        'mark'],
+                                                                    Credit: int.parse(
+                                                                        dataname[i]
+                                                                            [
+                                                                            'credits']),
+                                                                    Mark: dataname[i]
+                                                                            [
+                                                                            'mark'] +
+                                                                        0.0,
                                                                     id: dataname[
-                                                                            i][
-                                                                        'id']));
+                                                                            i]
+                                                                        ['id'],
+                                                                  ),
+                                                                );
                                                               });
                                                             }
                                                           }
@@ -457,6 +464,7 @@ class _EditUserState extends State<EditUser> {
                                       });
                                       try {
                                         await user.deleteuserCourse(
+                                          widget.userType,
                                           widget.courses[index].id,
                                           index,
                                           widget.userid,

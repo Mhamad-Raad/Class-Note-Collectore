@@ -21,7 +21,7 @@ class _CourseInfoUpdateState extends State<CourseInfoUpdate> {
   void initState() {
     nameController.text = widget.course['name'];
     creditController.text = widget.course['credits'].toString();
-    idController.text = widget.course['id'];
+    idController.text = widget.course['id'].toString();
 
     // TODO: implement initState
     super.initState();

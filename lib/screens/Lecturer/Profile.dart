@@ -18,7 +18,12 @@ class LProfile extends StatefulWidget {
 
 class _ProfileState extends State<LProfile> {
   Admin a = Admin(
-      Name: 'Name', Email: 'Email', Password: 'Password', Id: 0, Type: 'Type');
+    Name: 'Name',
+    Email: 'Email',
+    Password: 'Password',
+    Id: 0,
+    Type: 'Type',
+  );
   @override
   Widget build(BuildContext context) {
     final Media = MediaQuery.of(context);

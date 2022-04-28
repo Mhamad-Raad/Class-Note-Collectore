@@ -134,7 +134,7 @@ class _ProfileState extends State<AProfile> {
                       children: [
                         const Icon(FontAwesomeIcons.graduationCap),
                         Text(user.numberofCourses.toString()),
-                        const Text("Credits")
+                        const Text("Courses")
                       ],
                     ),
                   ),
