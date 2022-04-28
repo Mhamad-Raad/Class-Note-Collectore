@@ -94,17 +94,21 @@ class _EditCourseState extends State<EditCourse> {
                                     },
                                   );
                                   setState(() {
-                                    user.courses[widget.index].assignments.add(
+                                    user.courses[widget.index].assignments
+                                        .insert(
+                                      int.parse(WeekController.text),
                                       Assignment(
                                         Mark: double.parse(MarkController.text),
                                         Content: ContentController.text,
                                         Id: randomNumber,
                                         title: TitleController.text,
-                                        date: int.parse(WeekController.text),
+                                        date:
+                                            int.parse(WeekController.text) - 1,
                                         status: false,
                                       ),
                                     );
-                                    user.courses[widget.index].weeks++;
+                                    user.courses[widget.index].weeks =
+                                        int.parse(WeekController.text);
                                   });
 
                                   Navigator.pop(context);

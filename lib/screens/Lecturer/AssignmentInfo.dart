@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fyp/screens/Lecturer/Courses.dart';
 import 'package:fyp/screens/Lecturer/EditCourse.dart';
 import 'package:provider/provider.dart';
 
@@ -64,13 +65,19 @@ class _AssignmentInfoState extends State<AssignmentInfo> {
                 color: Colors.red,
               ),
               onPressed: () async {
-                await user.deleteAssignment(user.courses[widget.coursei].id,
-                    user.courses[widget.coursei].assignments[widget.asgi].Id);
+                await user.deleteAssignment(
+                    user.courses[widget.coursei].id,
+                    user.courses[widget.coursei].assignments[widget.asgi].Id,
+                    user.courses[widget.coursei].weeks - 1);
+                
+                  user.courses[widget.coursei].assignments
+                      .removeAt(widget.asgi);
+                  user.courses[widget.coursei].weeks--;
+           
 
-                user.courses[widget.coursei].assignments.removeAt(widget.asgi);
-                user.courses[widget.coursei].weeks--;
-                Navigator.pop(
+                Navigator.pushReplacement(
                   context,
+                  MaterialPageRoute(builder: (_) => CoursesDetails()),
                 );
               },
             ),

@@ -300,10 +300,10 @@ class _EditUserState extends State<EditUser> {
                                                                     Name: dataname[
                                                                             i][
                                                                         'name'],
-                                                                    Credit: int.parse(
-                                                                        dataname[i]
+                                                                    Credit: int.parse(dataname[i]
                                                                             [
-                                                                            'credits']),
+                                                                            'credits']
+                                                                        .toString()),
                                                                     Mark: dataname[i]
                                                                             [
                                                                             'mark'] +
