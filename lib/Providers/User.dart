@@ -275,17 +275,6 @@ class User extends ChangeNotifier {
     await http.delete(
       Uri.parse(url),
     );
-    final url1 =
-        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Lecturer/$id/courses/$courseID.json';
-
-    await http.patch(
-      Uri.parse(url1),
-      body: json.encode(
-        {
-          'weeks': neweek,
-        },
-      ),
-    );
 
     const studenturl =
         'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student.json';
@@ -303,17 +292,6 @@ class User extends ChangeNotifier {
                 'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student/$studentID/courses/$cID/assignments/$assignmentID.json';
             var a = await http.delete(
               Uri.parse(temp),
-            );
-            final temp1 =
-                'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Student/$studentID/courses/$cID.json';
-
-            await http.patch(
-              Uri.parse(url1),
-              body: json.encode(
-                {
-                  'weeks': neweek,
-                },
-              ),
             );
           }
         });
