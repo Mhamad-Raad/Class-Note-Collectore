@@ -7,10 +7,16 @@ import 'package:provider/provider.dart';
 import '../../Providers/User.dart';
 import 'profile.dart';
 
-class CourseInfo extends StatelessWidget {
+class CourseInfo extends StatefulWidget {
   late int index;
   CourseInfo({Key? key, required this.index}) : super(key: key);
 
+  @override
+  State<CourseInfo> createState() => _CourseInfoState();
+}
+
+class _CourseInfoState extends State<CourseInfo> {
+  List v = List.generate(10, (index) => false);
   @override
   Widget build(BuildContext context) {
     final Media = MediaQuery.of(context);
@@ -32,7 +38,7 @@ class CourseInfo extends StatelessWidget {
         ),
         centerTitle: true,
         title: Text(
-          user.courses[index].Name,
+          user.courses[widget.index].Name,
         ),
         actions: [
           Container(
@@ -58,80 +64,281 @@ class CourseInfo extends StatelessWidget {
                   children: [
                     const Text("Mark: "),
                     Text(
-                      user.courses[index].Mark.toString(),
+                      user.courses[widget.index].Mark.toString(),
                     ),
                   ],
                 ),
               ),
               SizedBox(
-                height: Media.size.height * .9,
                 width: Media.size.width,
-                child: ListView.builder(
-                  itemCount: user.courses[index].weeks,
-                  itemBuilder: (BuildContext context, int i) {
-                    if (user.courses[index].assignments[i].date == i + 1) {
-                      return Container(
-                        margin: const EdgeInsets.only(top: 30),
-                        height: 150,
-                        width: double.infinity,
-                        child: Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "Week ${i + 1}",
-                                textAlign: TextAlign.start,
+                height: Media.size.height,
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 7),
+                      height: Media.size.height * .7 * .11,
+                      width: Media.size.width * .95,
+                      margin: const EdgeInsets.only(top: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: (v[0] == true)
+                            ? const BorderRadius.only(
+                                topLeft: Radius.circular(30),
+                                topRight: Radius.circular(30),
+                              )
+                            : const BorderRadius.all(
+                                Radius.circular(50),
+                              ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Assignments"),
+                          IconButton(
+                            icon: Icon(
+                              (v[0] == true)
+                                  ? FontAwesomeIcons.angleDown
+                                  : FontAwesomeIcons.angleRight,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                v[0] = !v[0];
+                              });
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                    (v[0] == true)
+                        ? Container(
+                            height: Media.size.height * .9 * .3,
+                            width: Media.size.width * .95,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(30),
+                                bottomRight: Radius.circular(30),
                               ),
                             ),
-                            Container(
-                              color: Colors.grey[300],
-                              width: Media.size.width,
-                              height: 2,
-                            ),
-                            const Text(
-                              "Assignments",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 70),
+                              height: 200,
+                              child: ListView.builder(
+                                itemCount: user
+                                    .courses[widget.index].assignments.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Container(
+                                    margin: const EdgeInsets.only(
+                                      top: 20,
+                                      bottom: 20,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(30.0),
+                                      ),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            const Text("Title"),
+                                            Text(
+                                              user.courses[widget.index]
+                                                  .assignments[index].title,
+                                            )
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            const Text("Week"),
+                                            Text(
+                                              user.courses[widget.index]
+                                                  .assignments[index].date
+                                                  .toString(),
+                                            )
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 30,
+                                        ),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            primary: const Color.fromRGBO(
+                                                124, 131, 253, 1),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AssignmentInfo(
+                                                  asgi: index,
+                                                  coursei: widget.index,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: const Text("View Course"),
+                                        ),
+                                        const SizedBox(
+                                          height: 30,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
                               ),
                             ),
-                            const SizedBox(
-                              height: 15,
+                          )
+                        : Container(),
+                    SizedBox(
+                      width: Media.size.width,
+                      height: Media.size.height,
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 7),
+                            height: Media.size.height * .7 * .11,
+                            width: Media.size.width * .95,
+                            margin: const EdgeInsets.only(top: 20),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: (v[0] == true)
+                                  ? const BorderRadius.only(
+                                      topLeft: Radius.circular(30),
+                                      topRight: Radius.circular(30),
+                                    )
+                                  : const BorderRadius.all(
+                                      Radius.circular(50),
+                                    ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  user.courses[index].assignments[i].title,
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    primary:
-                                        const Color.fromRGBO(124, 131, 253, 1),
+                                const Text("Notes"),
+                                IconButton(
+                                  icon: Icon(
+                                    (v[0] == true)
+                                        ? FontAwesomeIcons.angleDown
+                                        : FontAwesomeIcons.angleRight,
                                   ),
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => AssignmentInfo(
-                                          asgi: i,
-                                          coursei: index,
-                                        ),
-                                      ),
-                                    );
+                                    setState(() {
+                                      v[0] = !v[0];
+                                    });
                                   },
-                                  child: const Text(
-                                    "view assignment",
-                                  ),
                                 )
                               ],
-                            )
-                          ],
-                        ),
-                      );
-                    }
-                    return Container();
-                  },
+                            ),
+                          ),
+                          false
+                              ? Container(
+                                  height: Media.size.height * .9 * .3,
+                                  width: Media.size.width * .95,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(30),
+                                      bottomRight: Radius.circular(30),
+                                    ),
+                                  ),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 70),
+                                    height: 200,
+                                    child: ListView.builder(
+                                      itemCount: user.courses[widget.index]
+                                          .assignments.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return Container(
+                                          margin: const EdgeInsets.only(
+                                            top: 20,
+                                            bottom: 20,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[200],
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              Radius.circular(30.0),
+                                            ),
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              const SizedBox(
+                                                height: 20,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  const Text("Title"),
+                                                  Text(
+                                                    user
+                                                        .courses[widget.index]
+                                                        .assignments[index]
+                                                        .title,
+                                                  )
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  const Text("Week"),
+                                                  Text(
+                                                    user.courses[widget.index]
+                                                        .assignments[index].date
+                                                        .toString(),
+                                                  )
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 30,
+                                              ),
+                                              ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  primary: const Color.fromRGBO(
+                                                      124, 131, 253, 1),
+                                                ),
+                                                onPressed: () {},
+                                                child:
+                                                    const Text("View Course"),
+                                              ),
+                                              const SizedBox(
+                                                height: 30,
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
