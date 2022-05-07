@@ -424,7 +424,7 @@ class User extends ChangeNotifier {
                 String temp = value['name'].toString();
                 temp = temp.toLowerCase();
 
-                if (temp.contains(wanted)) {
+                if (temp.contains(wanted) && temp != 'null') {
                   suggestions.add(
                     {
                       'name': value['name'],
@@ -585,6 +585,22 @@ class User extends ChangeNotifier {
         {
           'name': cName,
           'credits': cCredits,
+        },
+      ),
+    );
+  }
+
+  addGroups(courseData, courseLecture, courseStudents) async {
+    var url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/groups/${courseData['id']}.json';
+    await http.put(
+      Uri.parse(url),
+      body: json.encode(
+        {
+          'name': courseData['name'],
+          'lname': courseLecture['name'],
+          'lid': courseLecture['id'],
+          'students': courseStudents,
         },
       ),
     );

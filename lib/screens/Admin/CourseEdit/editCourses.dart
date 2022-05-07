@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fyp/screens/Admin/CourseEdit/CourseUpdate.dart';
+import 'package:fyp/screens/Admin/GroupsEdit/Groups.dart';
 import 'package:fyp/screens/Admin/editUser/searchUser.dart';
 import '../Profile.dart';
 import 'dart:math';
@@ -416,7 +417,7 @@ class _EditCoursesState extends State<EditCourses> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const Search(),
+                builder: (context) => const Groups(),
               ),
             );
           }

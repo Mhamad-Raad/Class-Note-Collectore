@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../Providers/User.dart';
 import '../Login.dart';
 import 'CourseEdit/editCourses.dart';
+import 'GroupsEdit/Groups.dart';
 import 'editUser/searchUser.dart';
 
 class AProfile extends StatefulWidget {
@@ -188,7 +189,14 @@ class _ProfileState extends State<AProfile> {
               ),
             );
           }
-          if (val == 2) {}
+          if (val == 2) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Groups(),
+              ),
+            );
+          }
         },
         items: const [
           BottomNavigationBarItem(
