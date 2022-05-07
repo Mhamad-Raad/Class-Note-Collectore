@@ -4,11 +4,13 @@ import 'Lecturer.dart';
 import 'Student.dart';
 
 class Group {
-  int id;
+  var id;
 
   List<Student> students = [];
-  late Lecturer lecturer;
+  Lecturer lecturer = Lecturer(
+      Name: "USER", Email: "Email", Password: "Password", Id: "", Type: "");
   late Message message;
+  late var title;
 
   Group({required this.id});
 }

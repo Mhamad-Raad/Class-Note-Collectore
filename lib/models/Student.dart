@@ -17,7 +17,7 @@ class Student extends Education {
       {required String Name,
       required String Email,
       required String Password,
-      required int Id,
+      required String Id,
       required String Type,
       required this.Section,
       required this.CGPU,

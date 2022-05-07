@@ -54,8 +54,10 @@ class _ChooseCurseState extends State<ChooseCurse> {
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 10),
-            child: const IconButton(
-              onPressed: null,
+            child: IconButton(
+              onPressed: () async {
+                await user.getGroups();
+              },
               icon: Icon(
                 FontAwesomeIcons.graduationCap,
                 color: Colors.black,

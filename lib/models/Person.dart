@@ -6,7 +6,7 @@ class Person {
   // ignore: non_constant_identifier_names
   late String Password;
   // ignore: non_constant_identifier_names
-  late int Id;
+  late String Id;
   // ignore: non_constant_identifier_names
   late String Type;
 

@@ -152,7 +152,8 @@ class _LoginState extends State<Login> {
                                   if (_formKey.currentState!.validate()) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                          content: Text('Processing Data')),
+                                        content: Text('Processing Data'),
+                                      ),
                                     );
                                   } else if (!_formKey.currentState!
                                       .validate()) {
@@ -185,14 +186,7 @@ class _LoginState extends State<Login> {
                                       );
                                     } else if (user.type == 'Student') {
                                       await user.getCourses();
-                                      // for (int i = 0;
-                                      //     i < user.courses.length;
-                                      //     i++) {
-                                      //   print(user.courses[i].Name);
-                                      //   print(user.courses[i].id);
-
-                                      //   print(user.courses.length);
-                                      // }
+                                      await user.getGroups();
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(

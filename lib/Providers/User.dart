@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:fyp/models/Assignment.dart';
+import 'package:fyp/models/Group.dart';
+import 'package:fyp/models/Student.dart';
 import 'package:http/http.dart' as http;
 import '../models/Course.dart';
 
@@ -11,6 +13,8 @@ class User extends ChangeNotifier {
   String type;
   List<Course> courses = [];
   List<Map> allCourses = [];
+  List<Group> groups = [];
+  List<Group> allgroups = [];
   int credits = 0;
   double cgpa = 0;
   List<Map<dynamic, dynamic>> suggestions = [];
@@ -339,6 +343,7 @@ class User extends ChangeNotifier {
         },
       ),
     );
+    numberofStudents++;
   }
 
   Future<void> addLecturer({type, name, course, email, password, id}) async {
@@ -487,6 +492,7 @@ class User extends ChangeNotifier {
         'credits': course['credits'],
       }),
     );
+    numberofCourses++;
   }
 
   getAllCourses() async {
@@ -604,5 +610,82 @@ class User extends ChangeNotifier {
         },
       ),
     );
+  }
+
+  getGroups() async {
+    groups = [];
+    var url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/groups.json';
+    final response = await http.get(
+      Uri.parse(url),
+    );
+    var data = json.decode(response.body) as Map;
+    data.forEach(
+      (id, content) {
+        for (var i = 0; i < courses.length; i++) {
+          if (id == courses[i].id) {
+            var group = Group(id: id);
+            group.lecturer.Name = content['lname'];
+            group.lecturer.Id = content['lid'];
+            group.title = content['name'];
+            var students = content['students'] as List;
+
+            students.forEach(
+              (value) {
+                var student = Student(
+                  Name: value['name'],
+                  Email: '',
+                  Password: '',
+                  Id: value["id"],
+                  Type: 'Type',
+                  Section: 0,
+                  CGPU: 0,
+                  Credit: 0,
+                  Semester: 0,
+                );
+                group.students.add(student);
+              },
+            );
+
+            groups.add(group);
+          }
+        }
+      },
+    );
+  }
+
+  getallGroups() async {
+    allgroups = [];
+    var url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/groups.json';
+    final response = await http.get(
+      Uri.parse(url),
+    );
+    var data = json.decode(response.body) as Map;
+    data.forEach((id, content) {
+      var group = Group(id: id);
+      group.lecturer.Name = content['lname'];
+      group.lecturer.Id = content['lid'];
+      group.title = content['name'];
+      var students = content['students'] as List;
+
+      students.forEach(
+        (value) {
+          var student = Student(
+            Name: value['name'],
+            Email: '',
+            Password: '',
+            Id: value["id"],
+            Type: 'Type',
+            Section: 0,
+            CGPU: 0,
+            Credit: 0,
+            Semester: 0,
+          );
+          group.students.add(student);
+        },
+      );
+      allgroups.add(group);
+    });
   }
 }
