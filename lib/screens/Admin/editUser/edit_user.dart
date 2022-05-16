@@ -76,7 +76,7 @@ class _EditUserState extends State<EditUser> {
                       type: widget.userType,
                       name: nameController.text,
                       passowrd: passwordController.text,
-                      cgpa: cgpaController.text,
+                      cgpa: double.parse(cgpaController.text),
                       userid: widget.userid);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/models/Admin.dart';
 import 'package:fyp/screens/Student/CourseDetails.dart';
+import 'package:fyp/screens/Student/Groups.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -220,6 +221,14 @@ class _ProfileState extends State<Profile> {
               context,
               MaterialPageRoute(
                 builder: (context) => const CoursesDetails(),
+              ),
+            );
+          }
+          if (val == 2) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Groups(),
               ),
             );
           }

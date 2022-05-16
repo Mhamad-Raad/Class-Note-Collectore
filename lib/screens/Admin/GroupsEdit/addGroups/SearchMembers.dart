@@ -7,6 +7,7 @@ import '../../Profile.dart';
 
 class AddMemebers extends StatefulWidget {
   var courseData;
+
   AddMemebers({Key? key, required this.courseData}) : super(key: key);
 
   @override
@@ -130,81 +131,78 @@ class _AddMemebersState extends State<AddMemebers> {
             ),
             isLoading
                 ? const CircularProgressIndicator()
-                : Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      child: ListView.builder(
-                        itemCount: user.suggestions.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
-                            title: Text(
-                              user.suggestions[index]['name'] ?? 'user',
-                            ),
-                            subtitle: Text(
-                              user.suggestions[index]['type'] ?? "User",
-                            ),
-                            trailing: Checkbox(
-                              onChanged: (value) {
-                                if (user.suggestions[index]['type'] ==
-                                    'Lecturer') {
-                                  if (lecturerCount >= 1 &&
-                                      selectedUsers[index] == false) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                            'you can only select one course'),
-                                      ),
-                                    );
-                                  } else {
-                                    lecturerData = {
-                                      'name': user.suggestions[index]['name'],
-                                      'id': user.suggestions[index]['id'],
-                                    };
-                                    setState(() {
-                                      selectedUsers[index] =
-                                          !selectedUsers[index];
-                                    });
-                                    if (selectedUsers[index] == false) {
-                                      setState(() {
-                                        lecturerSelected = false;
-                                        lecturerData = {};
-                                        lecturerCount--;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        lecturerCount++;
-                                        lecturerSelected = true;
-                                      });
-                                    }
-                                  }
+                : Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ListView.builder(
+                      itemCount: user.suggestions.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                          title: Text(
+                            user.suggestions[index]['name'] ?? 'user',
+                          ),
+                          subtitle: Text(
+                            user.suggestions[index]['type'] ?? "User",
+                          ),
+                          trailing: Checkbox(
+                            onChanged: (value) {
+                              if (user.suggestions[index]['type'] ==
+                                  'Lecturer') {
+                                if (lecturerCount >= 1 &&
+                                    selectedUsers[index] == false) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'you can only select one Lecturer'),
+                                    ),
+                                  );
                                 } else {
+                                  lecturerData = {
+                                    'name': user.suggestions[index]['name'],
+                                    'id': user.suggestions[index]['id'],
+                                  };
                                   setState(() {
                                     selectedUsers[index] =
                                         !selectedUsers[index];
                                   });
-                                  if (selectedUsers[index] == true) {
+                                  if (selectedUsers[index] == false) {
                                     setState(() {
-                                      studentSelected = true;
-                                      studentData.add({
-                                        'name': user.suggestions[index]['name'],
-                                        'id': user.suggestions[index]['id'],
-                                      });
+                                      lecturerSelected = false;
+                                      lecturerData = {};
+                                      lecturerCount--;
                                     });
                                   } else {
                                     setState(() {
-                                      studentSelected = false;
-                                      studentData.removeWhere((element) =>
-                                          user.suggestions[index]['id'] ==
-                                          element['id']);
+                                      lecturerCount++;
+                                      lecturerSelected = true;
                                     });
                                   }
                                 }
-                              },
-                              value: selectedUsers[index],
-                            ),
-                          );
-                        },
-                      ),
+                              } else {
+                                setState(() {
+                                  selectedUsers[index] = !selectedUsers[index];
+                                });
+                                if (selectedUsers[index] == true) {
+                                  setState(() {
+                                    studentSelected = true;
+                                    studentData.add({
+                                      'name': user.suggestions[index]['name'],
+                                      'id': user.suggestions[index]['id'],
+                                    });
+                                  });
+                                } else {
+                                  setState(() {
+                                    studentSelected = false;
+                                    studentData.removeWhere((element) =>
+                                        user.suggestions[index]['id'] ==
+                                        element['id']);
+                                  });
+                                }
+                              }
+                            },
+                            value: selectedUsers[index],
+                          ),
+                        );
+                      },
                     ),
                   ),
           ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fyp/screens/Lecturer/EditCourse.dart';
+import 'package:fyp/screens/Lecturer/groups.dart';
 
 import 'package:provider/provider.dart';
 
@@ -233,6 +234,14 @@ class _CoursesDetailsState extends State<CoursesDetails> {
               context,
               MaterialPageRoute(
                 builder: (context) => const LProfile(),
+              ),
+            );
+          }
+          if (val == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Groups(),
               ),
             );
           }

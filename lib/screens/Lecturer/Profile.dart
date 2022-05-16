@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/models/Admin.dart';
 import 'package:fyp/screens/Lecturer/Courses.dart';
+import 'package:fyp/screens/Lecturer/groups.dart';
 import 'package:fyp/screens/Lecturer/searchStudent.dart';
 import 'package:fyp/screens/Login.dart';
 
@@ -191,6 +192,14 @@ class _ProfileState extends State<LProfile> {
               context,
               MaterialPageRoute(
                 builder: (context) => const CoursesDetails(),
+              ),
+            );
+          }
+          if (val == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Groups(),
               ),
             );
           }

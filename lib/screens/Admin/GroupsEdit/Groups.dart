@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fyp/screens/Admin/GroupsEdit/EDIT/editStudents.dart';
 import 'package:fyp/screens/Admin/GroupsEdit/addGroups/chooseCourse.dart';
+import 'package:fyp/screens/Admin/GroupsEdit/EDIT/editLecturer.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Providers/User.dart';
+import '../CourseEdit/editCourses.dart';
 import '../Profile.dart';
 
 class Groups extends StatefulWidget {
@@ -119,9 +122,142 @@ class _GroupsState extends State<Groups> {
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: user.allCourses.length,
+                itemCount: user.allgroups.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ListTile();
+                  return Card(
+                    child: ListTile(
+                      title: Text(user.allgroups[index].title),
+                      subtitle: Text(user.allgroups[index].id),
+                      onTap: delete
+                          ? () {
+                              user.deleteAgroup(user.allgroups[index].id);
+                            }
+                          : () {
+                              showDialog(
+                                context: context,
+                                builder: (_) {
+                                  return AlertDialog(
+                                    title: const Text('Edit ?'),
+                                    content: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    editLecturer(
+                                                  gid: user.allgroups[index].id,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: const [
+                                              Text("Lecturer"),
+                                              Icon(Icons.person),
+                                            ],
+                                          ),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    editStudents(
+                                                  gid: user.allgroups[index].id,
+                                                  students: user
+                                                      .allgroups[index]
+                                                      .students,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: const [
+                                              Text("Students"),
+                                              Icon(Icons.group),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                      trailing: IconButton(
+                        onPressed: delete
+                            ? () {
+                                user.deleteAgroup(user.allgroups[index].id);
+                              }
+                            : () {
+                                showDialog(
+                                  context: context,
+                                  builder: (_) {
+                                    return AlertDialog(
+                                      title: const Text('Edit ?'),
+                                      content: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      editLecturer(
+                                                    gid: user
+                                                        .allgroups[index].id,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: const [
+                                                Text("Lecturer"),
+                                                Icon(Icons.person),
+                                              ],
+                                            ),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () {},
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: const [
+                                                Text("Students"),
+                                                Icon(Icons.group),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                        icon: delete
+                            ? const Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              )
+                            : const Icon(
+                                Icons.edit,
+                              ),
+                      ),
+                    ),
+                  );
                 },
               ),
             ),
@@ -133,20 +269,20 @@ class _GroupsState extends State<Groups> {
         selectedItemColor: Colors.amber,
         currentIndex: 2,
         onTap: (val) {
+          if (val == 1) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditCourses(),
+              ),
+            );
+          }
+
           if (val == 0) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => AProfile(),
-              ),
-            );
-          }
-
-          if (val == 2) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Groups(),
               ),
             );
           }

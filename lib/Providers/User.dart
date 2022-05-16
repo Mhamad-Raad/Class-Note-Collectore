@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:fyp/models/Assignment.dart';
 import 'package:fyp/models/Group.dart';
+import 'package:fyp/models/Lecturer.dart';
 import 'package:fyp/models/Student.dart';
 import 'package:http/http.dart' as http;
 import '../models/Course.dart';
@@ -40,6 +41,8 @@ class User extends ChangeNotifier {
     allCourses = [];
     courses = [];
     suggestions = [];
+    groups = [];
+    allgroups = [];
   }
 
   Future<bool> Login(email, password) async {
@@ -61,11 +64,12 @@ class User extends ChangeNotifier {
         if (type == "Student") {
           details.forEach((id, value) {
             if (email == value['email'] && password == value['password']) {
+              var tempcgpa = value['cgpa'] as double;
               this.type = type;
               this.Email = value['email'];
               this.Name = value['name'];
               this.id = id;
-              this.cgpa = double.parse(value['cgpa']) + 1.0 - 1.0;
+              this.cgpa = tempcgpa;
               this.credits = value['credits'];
 
               found = true;
@@ -610,6 +614,7 @@ class User extends ChangeNotifier {
         },
       ),
     );
+    getallGroups();
   }
 
   getGroups() async {
@@ -662,30 +667,70 @@ class User extends ChangeNotifier {
       Uri.parse(url),
     );
     var data = json.decode(response.body) as Map;
-    data.forEach((id, content) {
-      var group = Group(id: id);
-      group.lecturer.Name = content['lname'];
-      group.lecturer.Id = content['lid'];
-      group.title = content['name'];
-      var students = content['students'] as List;
+    data.forEach(
+      (id, content) {
+        var group = Group(id: id);
+        group.lecturer.Name = content['lname'];
+        group.lecturer.Id = content['lid'];
+        group.title = content['name'];
+        var students = content['students'] as List;
 
-      students.forEach(
-        (value) {
-          var student = Student(
-            Name: value['name'],
-            Email: '',
-            Password: '',
-            Id: value["id"],
-            Type: 'Type',
-            Section: 0,
-            CGPU: 0,
-            Credit: 0,
-            Semester: 0,
-          );
-          group.students.add(student);
+        students.forEach(
+          (value) {
+            var student = Student(
+              Name: value['name'],
+              Email: '',
+              Password: '',
+              Id: value["id"],
+              Type: 'Type',
+              Section: 0,
+              CGPU: 0,
+              Credit: 0,
+              Semester: 0,
+            );
+            group.students.add(student);
+          },
+        );
+        allgroups.add(group);
+      },
+    );
+  }
+
+  updateGroupStudents(gid, gstudents) async {
+    var url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/groups/$gid.json';
+    final response = await http.patch(
+      Uri.parse(url),
+      body: json.encode(
+        {
+          'students': gstudents,
         },
-      );
-      allgroups.add(group);
-    });
+      ),
+    );
+    getallGroups();
+  }
+
+  updateGroupLecturer(gid, cl) async {
+    var url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/groups/$gid.json';
+    final response = await http.patch(
+      Uri.parse(url),
+      body: json.encode(
+        {
+          'lid': cl['id'],
+          'lname': cl['name'],
+        },
+      ),
+    );
+    getallGroups();
+  }
+
+  deleteAgroup(gid) async {
+    var url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/groups/$gid.json';
+    final response = await http.delete(
+      Uri.parse(url),
+    );
+    allgroups.removeWhere((element) => element.id == gid);
   }
 }

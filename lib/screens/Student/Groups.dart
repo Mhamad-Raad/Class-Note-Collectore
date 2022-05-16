@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fyp/screens/Lecturer/Courses.dart';
 
+import '../Student/profile.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Providers/User.dart';
-import 'Profile.dart';
+import 'CourseDetails.dart';
 
 class Groups extends StatefulWidget {
   const Groups({Key? key}) : super(key: key);
@@ -96,7 +96,7 @@ class _GroupsState extends State<Groups> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => LProfile(),
+                builder: (context) => Profile(),
               ),
             );
           }

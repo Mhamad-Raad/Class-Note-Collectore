@@ -177,6 +177,7 @@ class _LoginState extends State<Login> {
                                       isLoading = false;
                                     });
                                     if (user.type == 'Admin') {
+                                      user.getallGroups();
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
@@ -195,6 +196,7 @@ class _LoginState extends State<Login> {
                                       );
                                     } else if (user.type == 'Lecturer') {
                                       await user.getCourses();
+                                      await user.getGroups();
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
