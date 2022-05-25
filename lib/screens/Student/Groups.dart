@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fyp/screens/Student/Messages.dart';
 
 import '../Student/profile.dart';
 import 'package:provider/provider.dart';
@@ -70,6 +71,17 @@ class _GroupsState extends State<Groups> {
                     child: ListTile(
                       title: Text(user.groups[index].title),
                       subtitle: Text(user.groups[index].id),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ClassMessages(
+                              groupTitle: user.groups[index].title,
+                              groupId: user.groups[index].id,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   );
                 },

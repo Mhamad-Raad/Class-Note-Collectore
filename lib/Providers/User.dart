@@ -119,7 +119,9 @@ class User extends ChangeNotifier {
 
       try {
         var assignments = structure['assignments'] as Map<dynamic, dynamic>;
+
         assignments.forEach((id, structure) {
+          print("object");
           var asg = Assignment(
             Mark: 0,
             Content: 'Content',
@@ -135,7 +137,6 @@ class User extends ChangeNotifier {
           asg.date = structure['date'] + 0;
           asg.status = structure['status'];
           course.assignments.add(asg);
-          courses[courses.length - 1].assignments.add(asg);
         });
       } catch (e) {
         courses[courses.length - 1].assignments = [];
