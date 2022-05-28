@@ -62,12 +62,10 @@ class _ClassMessagesState extends State<ClassMessages> {
                   return ListTile();
                 },
               ),
-            ), //fix this
-
+            ),
             Container(
               color: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-              // margin: EdgeInsets.only(bottom: ),
               child: TextField(
                 controller: messageController,
                 decoration: InputDecoration(
@@ -76,7 +74,16 @@ class _ClassMessagesState extends State<ClassMessages> {
                       color: Color.fromARGB(255, 86, 92, 198),
                     ),
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        user.addMessage(
+                          widget.groupId,
+                          {
+                            "content": messageController.text,
+                            'ownerid': user.id,
+                            'ownername': user.Name,
+                          },
+                        );
+                      },
                       icon: const Icon(Icons.send),
                     ),
                   ),

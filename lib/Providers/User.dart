@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:fyp/models/Assignment.dart';
 import 'package:fyp/models/Group.dart';
 import 'package:fyp/models/Lecturer.dart';
+import 'package:fyp/models/Message.dart';
 import 'package:fyp/models/Student.dart';
 import 'package:http/http.dart' as http;
 import '../models/Course.dart';
@@ -610,6 +611,7 @@ class User extends ChangeNotifier {
           'name': courseData['name'],
           'lname': courseLecture['name'],
           'lid': courseLecture['id'],
+          'messages': '',
           'students': courseStudents,
         },
       ),
@@ -651,6 +653,16 @@ class User extends ChangeNotifier {
                 group.students.add(student);
               },
             );
+            var messages = content['messages'] as Map;
+            messages.forEach((id, m) {
+              var message = Message(Content: "", Ownerid: "", MessageId: "");
+              message.Content = m['content'];
+              message.Ownerid = m['ownerid'];
+              message.MessageId = id;
+              message.ownerName = m['ownername'];
+
+              group.messages.add(message);
+            });
 
             groups.add(group);
           }
@@ -732,5 +744,20 @@ class User extends ChangeNotifier {
       Uri.parse(url),
     );
     allgroups.removeWhere((element) => element.id == gid);
+  }
+
+  addMessage(gid, message) async {
+    var url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/groups/$gid/messages.json';
+    await http.post(
+      Uri.parse(url),
+      body: json.encode(
+        {
+          'ownerid': message['ownerid'],
+          'ownername': message['ownername'],
+          'content': message['content'],
+        },
+      ),
+    );
   }
 }
