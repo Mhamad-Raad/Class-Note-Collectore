@@ -7,12 +7,6 @@ class Student extends Education {
   int Semester;
   double CGPU;
 
-  addNote() {}
-
-  checkClasses() {}
-
-  logout() {}
-
   Student(
       {required String Name,
       required String Email,

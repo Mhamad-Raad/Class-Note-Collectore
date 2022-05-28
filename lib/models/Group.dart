@@ -9,8 +9,10 @@ class Group {
   List<Student> students = [];
   Lecturer lecturer = Lecturer(
       Name: "USER", Email: "Email", Password: "Password", Id: "", Type: "");
-  late Message message;
+  late List<Message> messages;
   late var title;
 
-  Group({required this.id});
+  Group({
+    required this.id,
+  });
 }

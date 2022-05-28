@@ -15,6 +15,7 @@ class ClassMessages extends StatefulWidget {
 
 class _ClassMessagesState extends State<ClassMessages> {
   var messageController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context, listen: true);
@@ -61,27 +62,33 @@ class _ClassMessagesState extends State<ClassMessages> {
                   return ListTile();
                 },
               ),
-            ),
+            ), //fix this
+
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+              // margin: EdgeInsets.only(bottom: ),
+              child: TextField(
+                controller: messageController,
+                decoration: InputDecoration(
+                  suffixIcon: IconTheme(
+                    data: const IconThemeData(
+                      color: Color.fromARGB(255, 86, 92, 198),
+                    ),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.send),
+                    ),
+                  ),
+                  filled: true,
+                  hintText: "Message",
+                  fillColor: const Color.fromARGB(255, 147, 150, 210),
+                  border: const UnderlineInputBorder(),
+                ),
+              ),
+            )
           ],
         ),
-        // child: Column(
-        //   children: [
-        // Expanded(
-        //   child: ListView.builder(
-        //     itemBuilder: (context, index) {
-        //       return Container();
-        //     },
-        //   ),
-        // ),
-        // Container(
-        //   width: 100,
-        //   height: 100,
-        //   child: TextField(
-        //     controller: messageController,
-        //   ),
-        // ),
-        //   ],
-        // ),
       ),
     );
   }
