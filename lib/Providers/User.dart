@@ -616,6 +616,19 @@ class User extends ChangeNotifier {
         },
       ),
     );
+    var url1 =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/groups/${courseData['id']}/messages.json';
+    final a = await http.post(
+      Uri.parse(url1),
+      body: json.encode(
+        {
+          'ownerid': id,
+          'ownername': Name,
+          'content': "welcome to the ${courseData['name']} group",
+          'time': 0,
+        },
+      ),
+    );
     getallGroups();
   }
 
