@@ -112,9 +112,9 @@ class User extends ChangeNotifier {
       this.courses.add(course);
       course.Name = structure['name'];
 
-      course.Credit = int.parse(structure['credits']);
+      course.Credit = int.parse(structure['credits'] as String);
       course.Mark = double.parse(structure['mark'].toString()) + 0.0;
-      print(structure);
+
       course.progress = double.parse(structure['progress'].toString());
       course.weeks = structure['weeks'];
 
@@ -386,26 +386,30 @@ class User extends ChangeNotifier {
         Uri.parse(url),
       );
       var data = json.decode(response.body) as Map<String, dynamic>;
-      // print(data);
+
       suggestions.clear();
       data.forEach(
         (sID, value) {
           String temp = value['name'];
+          var sc = value['courses'] as Map;
           temp = temp.toLowerCase();
+          sc.forEach((key, v) {
+            courses.forEach((c) {
+              if (temp.contains(wanted) && key == c.id) {
+                suggestions.add(
+                  {
+                    'name': value['name'],
+                    'id': sID,
+                    'type': value['type'],
+                    'credits': value['credits'],
+                    'cgpa': value['cgpa']
+                  },
+                );
 
-          if (temp.contains(wanted)) {
-            suggestions.add(
-              {
-                'name': value['name'],
-                'id': sID,
-                'type': value['type'],
-                'credits': value['credits'],
-                'cgpa': value['cgpa']
-              },
-            );
-
-            notifyListeners();
-          }
+                notifyListeners();
+              }
+            });
+          });
         },
       );
     }

@@ -57,10 +57,10 @@ class _ClassMessagesState extends State<ClassMessages> {
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 10),
-            child: const IconButton(
-              onPressed: null,
+            child: IconButton(
+              onPressed: () {},
               icon: Icon(
-                FontAwesomeIcons.graduationCap,
+                FontAwesomeIcons.phone,
                 color: Colors.black,
               ),
             ),
