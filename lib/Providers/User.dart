@@ -112,7 +112,7 @@ class User extends ChangeNotifier {
       this.courses.add(course);
       course.Name = structure['name'];
 
-      course.Credit = structure['credits'];
+      course.Credit = int.parse(structure['credits']);
       course.Mark = double.parse(structure['mark'].toString()) + 0.0;
       print(structure);
       course.progress = double.parse(structure['progress'].toString());
@@ -666,16 +666,6 @@ class User extends ChangeNotifier {
                 group.students.add(student);
               },
             );
-            var messages = content['messages'] as Map;
-            messages.forEach((id, m) {
-              var message = Message(Content: "", Ownerid: "", MessageId: "");
-              message.Content = m['content'];
-              message.Ownerid = m['ownerid'];
-              message.MessageId = id;
-              message.ownerName = m['ownername'];
-
-              group.messages.add(message);
-            });
 
             groups.add(group);
           }
