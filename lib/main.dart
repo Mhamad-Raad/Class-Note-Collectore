@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+
+import 'package:firebase_core/firebase_core.dart';
+
 import 'package:fyp/Providers/User.dart';
-import 'package:fyp/screens/Admin/editUser/Admin_Add_User.dart';
-import 'package:fyp/screens/Admin/editUser/searchUser.dart';
-import 'package:fyp/screens/Student/profile.dart';
+
 import 'package:provider/provider.dart';
 
 import './screens/Login.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   Provider.debugCheckInvalidValueType = null;
+  await Firebase.initializeApp();
+
   runApp(
     const MyAPP(),
   );

@@ -1,6 +1,11 @@
+import 'dart:async';
+import 'dart:collection';
+
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 import '../../../Providers/User.dart';
 
@@ -14,6 +19,20 @@ class ClassMessages extends StatefulWidget {
 }
 
 class _ClassMessagesState extends State<ClassMessages> {
+  late var messages;
+  var _controller;
+  var max = 0;
+
+  @override
+  void initState() {
+    messages = FirebaseDatabase.instance
+        .ref()
+        .child('groups/${widget.groupId}/messages')
+        .onValue;
+    // TODO: implement initState
+    super.initState();
+  }
+
   var messageController = TextEditingController();
 
   @override
@@ -57,9 +76,75 @@ class _ClassMessagesState extends State<ClassMessages> {
         child: Column(
           children: [
             Expanded(
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  return ListTile();
+              child: StreamBuilder<DatabaseEvent>(
+                stream: messages,
+                builder:
+                    (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else {
+                    return FirebaseAnimatedList(
+                      query: FirebaseDatabase.instance
+                          .ref()
+                          .child('groups/${widget.groupId}/messages')
+                          .orderByChild("time"),
+                      itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                          Animation<double> animation, int index) {
+                        var data = snapshot.value as Map;
+
+                        return Row(
+                          mainAxisAlignment: data['ownerid'] == user.id
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 5, vertical: 10),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              decoration: BoxDecoration(
+                                color: data['ownerid'] == user.id
+                                    ? Colors.grey[300]
+                                    : const Color.fromRGBO(124, 131, 253, 1),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10),
+                                  bottomLeft: data['ownerid'] == user.id
+                                      ? Radius.circular(10)
+                                      : Radius.circular(1),
+                                  bottomRight: data['ownerid'] == user.id
+                                      ? Radius.circular(0)
+                                      : Radius.circular(10),
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: data['ownerid'] == user.id
+                                    ? CrossAxisAlignment.end
+                                    : CrossAxisAlignment.start,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      data['ownername'],
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    data['content'],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
               ),
             ),
@@ -75,6 +160,7 @@ class _ClassMessagesState extends State<ClassMessages> {
                     ),
                     child: IconButton(
                       onPressed: () {
+                        FocusScope.of(context).unfocus();
                         user.addMessage(
                           widget.groupId,
                           {
@@ -83,6 +169,7 @@ class _ClassMessagesState extends State<ClassMessages> {
                             'ownername': user.Name,
                           },
                         );
+                        messageController.clear();
                       },
                       icon: const Icon(Icons.send),
                     ),

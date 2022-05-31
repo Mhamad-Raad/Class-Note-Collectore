@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:fyp/models/Assignment.dart';
 import 'package:fyp/models/Group.dart';
-import 'package:fyp/models/Lecturer.dart';
 import 'package:fyp/models/Message.dart';
 import 'package:fyp/models/Student.dart';
 import 'package:http/http.dart' as http;
 import '../models/Course.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class User extends ChangeNotifier {
   String Name;
@@ -749,13 +749,14 @@ class User extends ChangeNotifier {
   addMessage(gid, message) async {
     var url =
         'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/groups/$gid/messages.json';
-    await http.post(
+    final a = await http.post(
       Uri.parse(url),
       body: json.encode(
         {
           'ownerid': message['ownerid'],
           'ownername': message['ownername'],
           'content': message['content'],
+          'time': Timestamp.now().seconds,
         },
       ),
     );

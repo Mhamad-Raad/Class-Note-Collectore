@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "550814965334",
+    "firebase_url": "https://class-note-collector-6bbcd-default-rtdb.firebaseio.com",
+    "project_id": "class-note-collector-6bbcd",
+    "storage_bucket": "class-note-collector-6bbcd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:550814965334:android:559be9ca7ea0daf59a65f7",
+        "android_client_info": {
+          "package_name": "com.example.fyp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "550814965334-0kirclb9erqnmsd8k8tdpt6i8750tn8v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxmF-JR0_zSExZQj1auzweBAP6fkyngQc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "550814965334-0kirclb9erqnmsd8k8tdpt6i8750tn8v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -9,7 +9,7 @@ class Group {
   List<Student> students = [];
   Lecturer lecturer = Lecturer(
       Name: "USER", Email: "Email", Password: "Password", Id: "", Type: "");
-  late List<Message> messages;
+  List<Message> messages = [];
   late var title;
 
   Group({

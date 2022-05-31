@@ -17,9 +17,10 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 1.0.0+1
 
+
 environment:
-  sdk: '>=2.16.0 <3.0.0'
-  flutter: ^2.10.0-0.2.pre
+  sdk: '>=2.17.1 <3.0.0'
+
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -34,11 +35,14 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.4
   http: ^0.13.4
-  provider: ^6.0.2
+  provider: ^6.0.3
   font_awesome_flutter: ^10.1.0
   firebase_core: ^1.17.1
+  firebase_database: ^9.0.15
+  cloud_firestore: ^3.1.17
+  
 
  
   
