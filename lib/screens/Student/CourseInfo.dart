@@ -257,8 +257,8 @@ class _CourseInfoState extends State<CourseInfo> {
                                       horizontal: 70),
                                   height: 200,
                                   child: ListView.builder(
-                                    itemCount: user.courses[widget.index]
-                                        .assignments.length,
+                                    itemCount:
+                                        user.courses[widget.index].notes.length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return Container(
@@ -284,22 +284,7 @@ class _CourseInfoState extends State<CourseInfo> {
                                                 const Text("Title"),
                                                 Text(
                                                   user.courses[widget.index]
-                                                      .assignments[index].title,
-                                                )
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                const Text("Week"),
-                                                Text(
-                                                  user.courses[widget.index]
-                                                      .assignments[index].date
-                                                      .toString(),
+                                                      .notes[index].noteTitle,
                                                 )
                                               ],
                                             ),
@@ -312,7 +297,10 @@ class _CourseInfoState extends State<CourseInfo> {
                                                     124, 131, 253, 1),
                                               ),
                                               onPressed: () {},
-                                              child: const Text("View Course"),
+                                              child: user.courses[widget.index]
+                                                      .notes[index].open
+                                                  ? Text("Write Note")
+                                                  : Text("View Note"),
                                             ),
                                             const SizedBox(
                                               height: 30,

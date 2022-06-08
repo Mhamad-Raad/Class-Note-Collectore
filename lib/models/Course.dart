@@ -1,4 +1,5 @@
 import 'package:fyp/models/Assignment.dart';
+import 'package:fyp/models/Notes.dart';
 
 class Course {
   List<Assignment> assignments = [];
@@ -6,9 +7,10 @@ class Course {
   String Name;
   int Credit;
   double Mark;
-  String id;
+  int id;
   double progress = 0;
   var weeks = 0;
+  List<Note> notes = [];
 
   Course({
     required this.Name,

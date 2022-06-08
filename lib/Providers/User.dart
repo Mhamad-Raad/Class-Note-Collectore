@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fyp/models/Assignment.dart';
 import 'package:fyp/models/Group.dart';
-import 'package:fyp/models/Message.dart';
+import 'package:fyp/models/Notes.dart';
 import 'package:fyp/models/Student.dart';
 import 'package:http/http.dart' as http;
 import '../models/Course.dart';
@@ -106,18 +108,41 @@ class User extends ChangeNotifier {
     var data = json.decode(response.body) as Map<String, dynamic>;
 
     data.forEach((id, structure) async {
-      Course course = Course(Name: "Name", Credit: 0, Mark: 0.0, id: "0");
+      Course course = Course(Name: "Name", Credit: 0, Mark: 0.0, id: 0);
 
-      course.id = id;
-      this.courses.add(course);
+      course.id = int.parse(id);
+
       course.Name = structure['name'];
 
-      course.Credit = int.parse(structure['credits'] as String);
+      course.Credit = int.parse(structure['credits'].toString());
       course.Mark = double.parse(structure['mark'].toString()) + 0.0;
 
       course.progress = double.parse(structure['progress'].toString());
       course.weeks = structure['weeks'];
 
+      var noteurl =
+          'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/notes.json';
+      final noter = await http.get(Uri.parse(noteurl));
+
+      var notedata = json.decode(noter.body) as Map;
+
+      notedata.forEach((nkey, value) {
+        print(value['courseid'].toString() + "bird");
+        print(course.id.toString() + "bird");
+        if (value['courseid'] == course.id) {
+          print('found');
+          var note = Note();
+          note.noteTitle = value['title'];
+          note.noteID = int.parse(nkey);
+          note.open = value['open'];
+          note.courseID = value['courseid'];
+          print('here');
+          course.notes.add(note);
+          print('here2');
+        }
+      });
+      print(course.notes.length);
+      this.courses.add(course);
       try {
         var assignments = structure['assignments'] as Map<dynamic, dynamic>;
 
@@ -767,5 +792,66 @@ class User extends ChangeNotifier {
         },
       ),
     );
+  }
+
+  createNote(cindex) async {
+    var rng = new Random();
+    var ran = rng.nextInt(100000);
+    int maxNote = 0;
+    var url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/notes/$ran.json';
+    final response = await http.put(
+      Uri.parse(url),
+      body: json.encode(
+        {
+          'title': courses[cindex].notes.length.toString(),
+          'open': true,
+          'courseid': courses[cindex].id,
+        },
+      ),
+    );
+    var note = Note();
+    note.noteTitle = courses[cindex].notes.length.toString();
+    note.noteID = ran;
+    note.open = true;
+    note.courseID = courses[cindex].id;
+    courses[cindex].notes.add(note);
+    notifyListeners();
+  }
+
+  addNote(noteID, time, content, ownerName, ownerid) async {
+    var url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/notes/$noteID/content.json';
+
+    final response = await http.post(
+      Uri.parse(url),
+      body: json.encode(
+        {
+          'ownername': ownerName,
+          'notescontent': content,
+          'time': time,
+          'ownerid': ownerid,
+        },
+      ),
+    );
+  }
+
+  closeNoteSession(cindex, noteID) async {
+    var url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/notes/$noteID.json';
+    final response = await http.patch(
+      Uri.parse(url),
+      body: json.encode(
+        {
+          'open': false,
+        },
+      ),
+    );
+
+    courses[cindex]
+        .notes[courses[cindex]
+            .notes
+            .indexWhere((element) => element.noteID == noteID)]
+        .open = false;
   }
 }

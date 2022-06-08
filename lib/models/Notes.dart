@@ -1,11 +1,7 @@
 class Note {
-  String Content;
-  String Time;
-  String ownerName;
-
-  Note({
-    required this.Content,
-    required this.Time,
-    required this.ownerName,
-  });
+  String noteTitle = '';
+  bool open = false;
+  int noteID = 0;
+  List<Map> content = [];
+  int courseID = 0;
 }
