@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fyp/screens/Student/AssignmentInfo.dart';
 import 'package:fyp/screens/Student/CourseDetails.dart';
+import 'package:fyp/screens/Student/writeNote.dart';
 import 'package:provider/provider.dart';
 
 import '../../Providers/User.dart';
@@ -296,7 +297,23 @@ class _CourseInfoState extends State<CourseInfo> {
                                                 primary: const Color.fromRGBO(
                                                     124, 131, 253, 1),
                                               ),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                if (user.courses[widget.index]
+                                                    .notes[index].open) {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          WriteNote(
+                                                        note: user
+                                                            .courses[
+                                                                widget.index]
+                                                            .notes[index],
+                                                      ),
+                                                    ),
+                                                  );
+                                                }
+                                              },
                                               child: user.courses[widget.index]
                                                       .notes[index].open
                                                   ? Text("Write Note")

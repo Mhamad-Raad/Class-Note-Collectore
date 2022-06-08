@@ -127,18 +127,14 @@ class User extends ChangeNotifier {
       var notedata = json.decode(noter.body) as Map;
 
       notedata.forEach((nkey, value) {
-        print(value['courseid'].toString() + "bird");
-        print(course.id.toString() + "bird");
         if (value['courseid'] == course.id) {
-          print('found');
           var note = Note();
           note.noteTitle = value['title'];
           note.noteID = int.parse(nkey);
           note.open = value['open'];
           note.courseID = value['courseid'];
-          print('here');
+
           course.notes.add(note);
-          print('here2');
         }
       });
       print(course.notes.length);
@@ -672,7 +668,7 @@ class User extends ChangeNotifier {
     data.forEach(
       (id, content) {
         for (var i = 0; i < courses.length; i++) {
-          if (id == courses[i].id) {
+          if (int.parse(id) == courses[i].id) {
             var group = Group(id: id);
             group.lecturer.Name = content['lname'];
             group.lecturer.Id = content['lid'];
@@ -695,7 +691,7 @@ class User extends ChangeNotifier {
                 group.students.add(student);
               },
             );
-
+            // print(groups);
             groups.add(group);
           }
         }

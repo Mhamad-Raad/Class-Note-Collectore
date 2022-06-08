@@ -95,6 +95,7 @@ class _GroupsState extends State<Groups> {
         selectedItemColor: Colors.amber,
         currentIndex: 2,
         onTap: (val) {
+        
           if (val == 1) {
             Navigator.pushReplacement(
               context,

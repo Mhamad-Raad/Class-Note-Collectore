@@ -2,6 +2,6 @@ class Note {
   String noteTitle = '';
   bool open = false;
   int noteID = 0;
-  List<Map> content = [];
+  String content = '';
   int courseID = 0;
 }
