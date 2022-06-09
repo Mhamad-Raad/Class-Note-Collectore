@@ -157,7 +157,7 @@ class _SearchState extends State<Search> {
                                     var course = Course(
                                       Credit: value['credits'],
                                       Name: value['name'],
-                                      id: key,
+                                      id: int.parse(key),
                                       Mark: value['mark'] + 0.0,
                                     );
 

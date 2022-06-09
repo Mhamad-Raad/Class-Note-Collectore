@@ -143,6 +143,7 @@ class _GroupsState extends State<Groups> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         ElevatedButton(
+                                          key: Key("value"),
                                           onPressed: () {
                                             Navigator.push(
                                               context,
@@ -165,6 +166,7 @@ class _GroupsState extends State<Groups> {
                                         ),
                                         ElevatedButton(
                                           onPressed: () {
+                                            print("object");
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -209,6 +211,7 @@ class _GroupsState extends State<Groups> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           ElevatedButton(
+                                            key: UniqueKey(),
                                             onPressed: () {
                                               Navigator.push(
                                                 context,
@@ -231,7 +234,22 @@ class _GroupsState extends State<Groups> {
                                             ),
                                           ),
                                           ElevatedButton(
-                                            onPressed: () {},
+                                            key: UniqueKey(),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      editStudents(
+                                                    gid: user
+                                                        .allgroups[index].id,
+                                                    students: user
+                                                        .allgroups[index]
+                                                        .students,
+                                                  ),
+                                                ),
+                                              );
+                                            },
                                             child: Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.spaceAround,

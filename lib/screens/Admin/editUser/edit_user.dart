@@ -70,6 +70,21 @@ class _EditUserState extends State<EditUser> {
               right: 10,
             ),
             child: IconButton(
+              icon: Icon(
+                Icons.delete,
+                color: Color.fromARGB(255, 232, 94, 85),
+              ),
+              onPressed: () async {
+                await user.deleteuser(widget.userType, widget.userid);
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(
+              right: 10,
+            ),
+            child: IconButton(
               onPressed: () async {
                 try {
                   await user.updateUsernameAndCgpaAndPassword(
@@ -418,7 +433,8 @@ class _EditUserState extends State<EditUser> {
                                                 height: 100,
                                                 width: 100,
                                                 child: Text(
-                                                    'something went wrong'),
+                                                  'something went wrong',
+                                                ),
                                               ),
                                             );
                                           },
@@ -431,6 +447,19 @@ class _EditUserState extends State<EditUser> {
                                       }
                                     });
                                   },
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                      const Color.fromRGBO(124, 131, 254, 1),
+                                    ),
+                                    shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(7.0),
+                                      ),
+                                    ),
+                                  ),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,

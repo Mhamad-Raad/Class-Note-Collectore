@@ -175,6 +175,15 @@ class User extends ChangeNotifier {
     notifyListeners();
   }
 
+  deleteuser(utype, userid) async {
+    print(userid);
+    final url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/$utype/$userid.json';
+    await http.delete(
+      Uri.parse(url),
+    );
+  }
+
   addAssignmentToACourse(CourseID, asg) async {
     final myurl =
         'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/users/Lecturer/${this.id}/courses/$CourseID/assignments/${asg['id']}.json';
@@ -416,14 +425,16 @@ class User extends ChangeNotifier {
       var data = json.decode(response.body) as Map<String, dynamic>;
 
       suggestions.clear();
+
       data.forEach(
         (sID, value) {
           String temp = value['name'];
+
           var sc = value['courses'] as Map;
           temp = temp.toLowerCase();
           sc.forEach((key, v) {
             courses.forEach((c) {
-              if (temp.contains(wanted) && key == c.id) {
+              if (temp.contains(wanted) && int.parse(key) == c.id) {
                 suggestions.add(
                   {
                     'name': value['name'],
@@ -672,10 +683,14 @@ class User extends ChangeNotifier {
       Uri.parse(url),
     );
     var data = json.decode(response.body) as Map;
+    print(data);
     data.forEach(
       (id, content) {
+        var temp = int.parse(id);
+        print(courses.length);
         for (var i = 0; i < courses.length; i++) {
-          if (int.parse(id) == courses[i].id) {
+          if (temp == courses[i].id) {
+            print('object');
             var group = Group(id: id);
             group.lecturer.Name = content['lname'];
             group.lecturer.Id = content['lid'];

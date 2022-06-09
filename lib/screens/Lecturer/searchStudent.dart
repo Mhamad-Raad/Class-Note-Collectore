@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../Providers/User.dart';
-import '../../../models/Course.dart';
+
 
 class SearchS extends StatefulWidget {
   const SearchS({Key? key}) : super(key: key);
@@ -151,11 +151,12 @@ class _SearchSState extends State<SearchS> {
 
                                 var data = json.decode(response.body)
                                     as Map<dynamic, dynamic>;
-                                print(data);
+
                                 var cd = data['courses'];
                                 cd.forEach((id, value) {
                                   user.courses.forEach((element) {
-                                    if (id == element.id) {
+                                    if (int.parse(id) == element.id) {
+                                      print(value['mark']);
                                       wantedCourse = {
                                         'owner': user.suggestions[index]['id'],
                                         'id': id,
