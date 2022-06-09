@@ -9,6 +9,13 @@ import 'package:fyp/models/Student.dart';
 import 'package:http/http.dart' as http;
 import '../models/Course.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:open_file/open_file.dart';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
 
 class User extends ChangeNotifier {
   String Name;
@@ -832,7 +839,7 @@ class User extends ChangeNotifier {
     );
   }
 
-  closeNoteSession(cindex, noteID) async {
+  closeNoteSession(cindex, noteID, notename) async {
     var url =
         'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/notes/$noteID.json';
     final response = await http.patch(
@@ -849,5 +856,64 @@ class User extends ChangeNotifier {
             .notes
             .indexWhere((element) => element.noteID == noteID)]
         .open = false;
+    createPDF(noteID, notename);
+  }
+
+  createPDF(noteID, notename) async {
+    PdfDocument document = PdfDocument();
+    final page = document.pages.add();
+
+    var url =
+        'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/notes/$noteID/content.json';
+    final response = await http.get(
+      Uri.parse(url),
+    );
+    var listOFnotes;
+    var data = json.decode(response.body) as Map;
+    var fakedata = json.decode(response.body) as Map;
+    int i = 0;
+    data.forEach((key1, value1) {
+      i == 0
+          ? page.graphics.drawString(
+              "                                " + value1['ownername'],
+              PdfStandardFont(PdfFontFamily.helvetica, 30))
+          : page.graphics
+              .drawString("", PdfStandardFont(PdfFontFamily.helvetica, 30));
+
+      fakedata.forEach((key2, value2) {
+        if (value1['ownername'] == value2['ownername']) {
+          page.graphics.drawString(value2['notescontent'],
+              PdfStandardFont(PdfFontFamily.helvetica, 16));
+        }
+      });
+      i++;
+    });
+
+    List<int> bytes = document.save();
+    document.dispose();
+    saveANDlunchFILE(bytes, notename);
+  }
+
+  saveANDlunchFILE(List<int> bytes, fileName) async {
+    final path = (await getExternalStorageDirectory())!.path;
+    final file = File("$path/$fileName");
+    file.writeAsBytes(bytes, flush: true);
+    // OpenFile.open("$path/$fileName");
+    final storageRef = FirebaseStorage.instance.ref();
+    final mountainsRef = storageRef.child(fileName);
+    await mountainsRef.putFile(file);
+  }
+
+  readFile(fileName) async {
+    final storageRef = FirebaseStorage.instance.ref();
+
+// Create a reference with an initial file path and name
+    final pathReference = storageRef.child(fileName);
+
+    final bytes = await pathReference.getData();
+    final path = (await getExternalStorageDirectory())!.path;
+    final file = File("$path/$fileName");
+    file.writeAsBytes(bytes!, flush: true);
+    OpenFile.open("$path/$fileName");
   }
 }

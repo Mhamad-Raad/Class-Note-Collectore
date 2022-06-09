@@ -312,6 +312,11 @@ class _CourseInfoState extends State<CourseInfo> {
                                                       ),
                                                     ),
                                                   );
+                                                } else {
+                                                  user.readFile(user
+                                                      .courses[widget.index]
+                                                      .notes[index]
+                                                      .noteTitle);
                                                 }
                                               },
                                               child: user.courses[widget.index]

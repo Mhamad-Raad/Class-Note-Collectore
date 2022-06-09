@@ -517,6 +517,11 @@ class _EditCourseState extends State<EditCourse> {
                                                       ),
                                                     ),
                                                   );
+                                                } else {
+                                                  user.readFile(user
+                                                      .courses[widget.index]
+                                                      .notes[index]
+                                                      .noteTitle);
                                                 }
                                               },
                                               child: user.courses[widget.index]

@@ -85,8 +85,9 @@ class _WriteNoteLState extends State<WriteNoteL> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          user.closeNoteSession(widget.cindex, widget.note.noteID);
+        onPressed: () async {
+          await user.closeNoteSession(
+              widget.cindex, widget.note.noteID, widget.note.noteTitle);
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -101,4 +102,6 @@ class _WriteNoteLState extends State<WriteNoteL> {
       ),
     );
   }
+
+  
 }
