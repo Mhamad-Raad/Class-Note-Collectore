@@ -676,7 +676,6 @@ class User extends ChangeNotifier {
   }
 
   getGroups() async {
-    groups = [];
     var url =
         'https://class-note-collector-6bbcd-default-rtdb.firebaseio.com/groups.json';
     final response = await http.get(
